@@ -3,22 +3,23 @@ package com.example.lease_cal.entity;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "income_sources")
+@Table(name = "t_comp_income_sources")
 public class IncomeSource {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "income_source_id")
+    private Long incomeSourceId;
     
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "party_id", nullable = false)
+    @JoinColumn(name = "comp_party_id")
     private Party party;
     
     @Column(name = "income_type", nullable = false, length = 50)
     private String incomeType;
     
-    @Column(name = "consider_for_repayment", nullable = false)
-    private Boolean considerForRepayment = false;
+    @Column(name = "consider_for_repayment", length = 5)
+    private String considerForRepayment;
     
     // Constructors
     public IncomeSource() {
@@ -30,12 +31,12 @@ public class IncomeSource {
     }
     
     // Getters and Setters
-    public Long getId() {
-        return id;
+    public Long getIncomeSourceId() {
+        return incomeSourceId;
     }
     
-    public void setId(Long id) {
-        this.id = id;
+    public void setIncomeSourceId(Long incomeSourceId) {
+        this.incomeSourceId = incomeSourceId;
     }
     
     public Party getParty() {
@@ -54,11 +55,11 @@ public class IncomeSource {
         this.incomeType = incomeType;
     }
     
-    public Boolean getConsiderForRepayment() {
+    public String getConsiderForRepayment() {
         return considerForRepayment;
     }
     
-    public void setConsiderForRepayment(Boolean considerForRepayment) {
+    public void setConsiderForRepayment(String considerForRepayment) {
         this.considerForRepayment = considerForRepayment;
     }
 }

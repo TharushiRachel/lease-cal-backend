@@ -1,36 +1,36 @@
 package com.example.lease_cal.entity;
 
-import com.example.lease_cal.entity.enums.CreationType;
-import com.example.lease_cal.entity.enums.ProductType;
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "leads")
+@Table(name = "t_comp_lead")
 public class Lead {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "comp_lead_id")
+    private Long compLeadId;
     
     @Column(name = "lead_name", nullable = false, length = 255)
     private String leadName;
     
-    @Enumerated(EnumType.STRING)
-    @Column(name = "creation_type", nullable = false, length = 20)
-    private CreationType creationType;
+    @Column(name = "creation_type", length = 50)
+    private String creationType;
     
-    @Enumerated(EnumType.STRING)
-    @Column(name = "product_type", length = 20)
-    private ProductType productType;
+    @Column(name = "CREATED_DATE")
+    private LocalDate createdDate;
     
-    @Column(name = "is_existing_customer", nullable = false)
-    private Boolean isExistingCustomer = false;
+    @Column(name = "CREATED_BY", length = 100)
+    private String createdBy;
     
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+    @Column(name = "MODIFIED_DATE")
+    private LocalDate modifiedDate;
+    
+    @Column(name = "MODIFIED_BY", length = 100)
+    private String modifiedBy;
     
     @OneToMany(mappedBy = "lead", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Party> parties = new ArrayList<>();
@@ -40,25 +40,31 @@ public class Lead {
     
     @PrePersist
     protected void onCreate() {
-        createdAt = LocalDateTime.now();
+        if (createdDate == null) {
+            createdDate = LocalDate.now();
+        }
+    }
+    
+    @PreUpdate
+    protected void onUpdate() {
+        modifiedDate = LocalDate.now();
     }
     
     // Constructors
     public Lead() {
     }
     
-    public Lead(String leadName, CreationType creationType) {
+    public Lead(String leadName) {
         this.leadName = leadName;
-        this.creationType = creationType;
     }
     
     // Getters and Setters
-    public Long getId() {
-        return id;
+    public Long getCompLeadId() {
+        return compLeadId;
     }
     
-    public void setId(Long id) {
-        this.id = id;
+    public void setCompLeadId(Long compLeadId) {
+        this.compLeadId = compLeadId;
     }
     
     public String getLeadName() {
@@ -69,36 +75,44 @@ public class Lead {
         this.leadName = leadName;
     }
     
-    public CreationType getCreationType() {
+    public String getCreationType() {
         return creationType;
     }
     
-    public void setCreationType(CreationType creationType) {
+    public void setCreationType(String creationType) {
         this.creationType = creationType;
     }
     
-    public ProductType getProductType() {
-        return productType;
+    public LocalDate getCreatedDate() {
+        return createdDate;
     }
     
-    public void setProductType(ProductType productType) {
-        this.productType = productType;
+    public void setCreatedDate(LocalDate createdDate) {
+        this.createdDate = createdDate;
     }
     
-    public Boolean getIsExistingCustomer() {
-        return isExistingCustomer;
+    public String getCreatedBy() {
+        return createdBy;
     }
     
-    public void setIsExistingCustomer(Boolean isExistingCustomer) {
-        this.isExistingCustomer = isExistingCustomer;
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
     
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+    public LocalDate getModifiedDate() {
+        return modifiedDate;
     }
     
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
+    public void setModifiedDate(LocalDate modifiedDate) {
+        this.modifiedDate = modifiedDate;
+    }
+    
+    public String getModifiedBy() {
+        return modifiedBy;
+    }
+    
+    public void setModifiedBy(String modifiedBy) {
+        this.modifiedBy = modifiedBy;
     }
     
     public List<Party> getParties() {

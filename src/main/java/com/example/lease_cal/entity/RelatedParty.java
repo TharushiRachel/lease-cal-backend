@@ -3,33 +3,34 @@ package com.example.lease_cal.entity;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "related_parties")
+@Table(name = "t_comp_related_parties")
 public class RelatedParty {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "related_party_id")
+    private Long relatedPartyId;
     
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "lead_id", nullable = false)
+    @JoinColumn(name = "comp_lead_id")
     private Lead lead;
     
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "main_party_id", nullable = false)
+    @JoinColumn(name = "main_partner_id")
     private Party mainParty;
     
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "related_party_id", nullable = false)
+    @JoinColumn(name = "related_partner_id")
     private Party relatedParty;
     
-    @Column(name = "relationship_description", columnDefinition = "TEXT")
+    @Column(name = "relationship_description", length = 500)
     private String relationshipDescription;
     
-    @Column(name = "consider_crib", nullable = false)
-    private Boolean considerCrib = false;
+    @Column(name = "consider_crib", length = 5)
+    private String considerCrib;
     
-    @Column(name = "consider_advance_analysis", nullable = false)
-    private Boolean considerAdvanceAnalysis = false;
+    @Column(name = "consider_advance_analysis", length = 5)
+    private String considerAdvanceAnalysis;
     
     // Constructors
     public RelatedParty() {
@@ -42,12 +43,12 @@ public class RelatedParty {
     }
     
     // Getters and Setters
-    public Long getId() {
-        return id;
+    public Long getRelatedPartyId() {
+        return relatedPartyId;
     }
     
-    public void setId(Long id) {
-        this.id = id;
+    public void setRelatedPartyId(Long relatedPartyId) {
+        this.relatedPartyId = relatedPartyId;
     }
     
     public Lead getLead() {
@@ -82,19 +83,19 @@ public class RelatedParty {
         this.relationshipDescription = relationshipDescription;
     }
     
-    public Boolean getConsiderCrib() {
+    public String getConsiderCrib() {
         return considerCrib;
     }
     
-    public void setConsiderCrib(Boolean considerCrib) {
+    public void setConsiderCrib(String considerCrib) {
         this.considerCrib = considerCrib;
     }
     
-    public Boolean getConsiderAdvanceAnalysis() {
+    public String getConsiderAdvanceAnalysis() {
         return considerAdvanceAnalysis;
     }
     
-    public void setConsiderAdvanceAnalysis(Boolean considerAdvanceAnalysis) {
+    public void setConsiderAdvanceAnalysis(String considerAdvanceAnalysis) {
         this.considerAdvanceAnalysis = considerAdvanceAnalysis;
     }
 }

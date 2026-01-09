@@ -3,18 +3,19 @@ package com.example.lease_cal.entity;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "party_addresses")
+@Table(name = "t_comp_party_addresses")
 public class PartyAddress {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "addresses_id")
+    private Long addressesId;
     
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "party_id", nullable = false)
+    @JoinColumn(name = "comp_party_id")
     private Party party;
     
-    @Column(name = "address", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "address", length = 1000)
     private String address;
     
     // Constructors
@@ -27,12 +28,12 @@ public class PartyAddress {
     }
     
     // Getters and Setters
-    public Long getId() {
-        return id;
+    public Long getAddressesId() {
+        return addressesId;
     }
     
-    public void setId(Long id) {
-        this.id = id;
+    public void setAddressesId(Long addressesId) {
+        this.addressesId = addressesId;
     }
     
     public Party getParty() {

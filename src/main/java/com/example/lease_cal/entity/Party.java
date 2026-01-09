@@ -1,27 +1,25 @@
 package com.example.lease_cal.entity;
 
-import com.example.lease_cal.entity.enums.PartyType;
 import jakarta.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "parties")
+@Table(name = "t_comp_parties")
 public class Party {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "comp_party_id")
+    private Long compPartyId;
     
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "lead_id", nullable = false)
+    @JoinColumn(name = "comp_lead_id")
     private Lead lead;
     
-    @Enumerated(EnumType.STRING)
-    @Column(name = "party_type", nullable = false, length = 20)
-    private PartyType partyType;
+    @Column(name = "party_type", length = 20)
+    private String partyType;
     
     @Column(name = "personal_name", nullable = false, length = 255)
     private String personalName;
@@ -41,8 +39,17 @@ public class Party {
     @Column(name = "preferred_branch", length = 100)
     private String preferredBranch;
     
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
+    @Column(name = "CREATED_DATE")
+    private LocalDate createdDate;
+    
+    @Column(name = "CREATED_BY", length = 100)
+    private String createdBy;
+    
+    @Column(name = "MODIFIED_DATE")
+    private LocalDate modifiedDate;
+    
+    @Column(name = "MODIFIED_BY", length = 100)
+    private String modifiedBy;
     
     @OneToMany(mappedBy = "party", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PartyIdentification> identifications = new ArrayList<>();
@@ -61,26 +68,33 @@ public class Party {
     
     @PrePersist
     protected void onCreate() {
-        createdAt = LocalDateTime.now();
+        if (createdDate == null) {
+            createdDate = LocalDate.now();
+        }
+    }
+    
+    @PreUpdate
+    protected void onUpdate() {
+        modifiedDate = LocalDate.now();
     }
     
     // Constructors
     public Party() {
     }
     
-    public Party(Lead lead, PartyType partyType, String personalName) {
+    public Party(Lead lead, String partyType, String personalName) {
         this.lead = lead;
         this.partyType = partyType;
         this.personalName = personalName;
     }
     
     // Getters and Setters
-    public Long getId() {
-        return id;
+    public Long getCompPartyId() {
+        return compPartyId;
     }
     
-    public void setId(Long id) {
-        this.id = id;
+    public void setCompPartyId(Long compPartyId) {
+        this.compPartyId = compPartyId;
     }
     
     public Lead getLead() {
@@ -91,11 +105,11 @@ public class Party {
         this.lead = lead;
     }
     
-    public PartyType getPartyType() {
+    public String getPartyType() {
         return partyType;
     }
     
-    public void setPartyType(PartyType partyType) {
+    public void setPartyType(String partyType) {
         this.partyType = partyType;
     }
     
@@ -147,12 +161,36 @@ public class Party {
         this.preferredBranch = preferredBranch;
     }
     
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+    public LocalDate getCreatedDate() {
+        return createdDate;
     }
     
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
+    public void setCreatedDate(LocalDate createdDate) {
+        this.createdDate = createdDate;
+    }
+    
+    public String getCreatedBy() {
+        return createdBy;
+    }
+    
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+    
+    public LocalDate getModifiedDate() {
+        return modifiedDate;
+    }
+    
+    public void setModifiedDate(LocalDate modifiedDate) {
+        this.modifiedDate = modifiedDate;
+    }
+    
+    public String getModifiedBy() {
+        return modifiedBy;
+    }
+    
+    public void setModifiedBy(String modifiedBy) {
+        this.modifiedBy = modifiedBy;
     }
     
     public List<PartyIdentification> getIdentifications() {
