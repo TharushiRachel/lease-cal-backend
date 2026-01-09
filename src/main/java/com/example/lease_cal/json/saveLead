@@ -1,0 +1,37 @@
+POST /api/leads
+Content-Type: application/json
+
+{
+  "leadName": "John Doe Lead",
+  "creationType": "PERSONAL",
+  "createdBy": "admin",
+  "parties": [
+    {
+      "compLeadId": null,
+      "partyType": "BORROWER",
+      "personalName": "John Doe",
+      "email": "john@example.com",
+      "mobileNumber": "1234567890",
+      "createdBy": "admin",
+      "identifications": [
+        {
+          "identificationType": "NIC",
+          "identificationNumber": "123456789V",
+          "createdBy": "admin"
+        }
+      ],
+      "addresses": [
+        {
+          "address": "123 Main Street, Colombo"
+        }
+      ],
+      "incomeSources": [
+        {
+          "incomeType": "SALARY",
+          "considerForRepayment": "Y"
+        }
+      ]
+    }
+  ],
+  "relatedParties": []
+}
