@@ -7,7 +7,8 @@ import jakarta.persistence.*;
 public class IncomeSource {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "income_source_seq")
+    @SequenceGenerator(name = "income_source_seq", sequenceName = "seq_income_source_id", allocationSize = 1)
     @Column(name = "income_source_id")
     private Long incomeSourceId;
     

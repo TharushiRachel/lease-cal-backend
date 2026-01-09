@@ -8,7 +8,8 @@ import java.time.LocalDate;
 public class PartyIdentification {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "party_identification_seq")
+    @SequenceGenerator(name = "party_identification_seq", sequenceName = "seq_party_identification_id", allocationSize = 1)
     @Column(name = "identification_id")
     private Long identificationId;
     

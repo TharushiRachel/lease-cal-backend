@@ -7,7 +7,8 @@ import jakarta.persistence.*;
 public class RelatedParty {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "related_party_seq")
+    @SequenceGenerator(name = "related_party_seq", sequenceName = "seq_related_party_id", allocationSize = 1)
     @Column(name = "related_party_id")
     private Long relatedPartyId;
     

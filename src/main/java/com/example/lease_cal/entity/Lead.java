@@ -10,7 +10,8 @@ import java.util.List;
 public class Lead {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "comp_lead_seq")
+    @SequenceGenerator(name = "comp_lead_seq", sequenceName = "seq_comp_lead_id", allocationSize = 1)
     @Column(name = "comp_lead_id")
     private Long compLeadId;
     

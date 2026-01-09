@@ -10,7 +10,8 @@ import java.util.List;
 public class Party {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "comp_party_seq")
+    @SequenceGenerator(name = "comp_party_seq", sequenceName = "seq_comp_party_id", allocationSize = 1)
     @Column(name = "comp_party_id")
     private Long compPartyId;
     
