@@ -14,6 +14,8 @@ public class PartyRequestDTO {
     private LocalDate dateOfBirth;
     private String civilStatus;
     private String preferredBranch;
+    private String considerCrib;
+    private String considerAdvanceAnalysis;
     private String createdBy;
     private List<PartyIdentificationRequestDTO> identifications;
     private List<PartyAddressRequestDTO> addresses;
@@ -89,6 +91,22 @@ public class PartyRequestDTO {
     
     public void setPreferredBranch(String preferredBranch) {
         this.preferredBranch = preferredBranch;
+    }
+    
+    public String getConsiderCrib() {
+        return considerCrib;
+    }
+    
+    public void setConsiderCrib(String considerCrib) {
+        this.considerCrib = considerCrib;
+    }
+    
+    public String getConsiderAdvanceAnalysis() {
+        return considerAdvanceAnalysis;
+    }
+    
+    public void setConsiderAdvanceAnalysis(String considerAdvanceAnalysis) {
+        this.considerAdvanceAnalysis = considerAdvanceAnalysis;
     }
     
     public String getCreatedBy() {

@@ -1,12 +1,13 @@
 package com.example.lease_cal.controller;
 
-import com.example.lease_cal.dto.LeadDTO;
-import com.example.lease_cal.dto.LeadRequestDTO;
+import com.example.lease_cal.dto.*;
 import com.example.lease_cal.service.LeadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/leads")
@@ -17,9 +18,9 @@ public class LeadController {
     private LeadService leadService;
     
     /**
-     * Create a new lead with all child entities (parties, identifications, addresses, income sources, related parties)
+     * Create a new lead with parties, identifications, and addresses only
      * 
-     * @param leadRequestDTO The lead request DTO containing all data
+     * @param leadRequestDTO The lead request DTO containing lead and party data
      * @return ResponseEntity with LeadDTO and HTTP status
      */
     @PostMapping
@@ -33,6 +34,58 @@ public class LeadController {
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new ErrorResponse("Error saving lead", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrorResponse("Unexpected error", e.getMessage()));
+        }
+    }
+    
+    /**
+     * Save income sources for a party
+     * 
+     * @param partyId The ID of the party
+     * @param incomeSourceRequestDTOs List of income source request DTOs
+     * @return ResponseEntity with list of IncomeSourceDTO and HTTP status
+     */
+    @PostMapping("/parties/{partyId}/income-sources")
+    public ResponseEntity<?> saveIncomeSources(
+            @PathVariable Long partyId,
+            @RequestBody List<IncomeSourceRequestDTO> incomeSourceRequestDTOs) {
+        try {
+            List<IncomeSourceDTO> savedIncomeSources = leadService.saveIncomeSources(
+                    partyId, 
+                    incomeSourceRequestDTOs
+            );
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedIncomeSources);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ErrorResponse("Error saving income sources", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrorResponse("Unexpected error", e.getMessage()));
+        }
+    }
+    
+    /**
+     * Save related parties for a lead
+     * 
+     * @param leadId The ID of the lead
+     * @param relatedPartyRequestDTOs List of related party request DTOs
+     * @return ResponseEntity with list of RelatedPartyDTO and HTTP status
+     */
+    @PostMapping("/{leadId}/related-parties")
+    public ResponseEntity<?> saveRelatedParties(
+            @PathVariable Long leadId,
+            @RequestBody List<RelatedPartyRequestDTO> relatedPartyRequestDTOs) {
+        try {
+            List<RelatedPartyDTO> savedRelatedParties = leadService.saveRelatedParties(
+                    leadId, 
+                    relatedPartyRequestDTOs
+            );
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedRelatedParties);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ErrorResponse("Error saving related parties", e.getMessage()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new ErrorResponse("Unexpected error", e.getMessage()));

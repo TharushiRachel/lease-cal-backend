@@ -40,6 +40,12 @@ public class Party {
     @Column(name = "preferred_branch", length = 100)
     private String preferredBranch;
     
+    @Column(name = "consider_crib", length = 5)
+    private String considerCrib;
+    
+    @Column(name = "consider_advance_analysis", length = 5)
+    private String considerAdvanceAnalysis;
+    
     @Column(name = "CREATED_DATE")
     private LocalDate createdDate;
     
@@ -160,6 +166,22 @@ public class Party {
     
     public void setPreferredBranch(String preferredBranch) {
         this.preferredBranch = preferredBranch;
+    }
+    
+    public String getConsiderCrib() {
+        return considerCrib;
+    }
+    
+    public void setConsiderCrib(String considerCrib) {
+        this.considerCrib = considerCrib;
+    }
+    
+    public String getConsiderAdvanceAnalysis() {
+        return considerAdvanceAnalysis;
+    }
+    
+    public void setConsiderAdvanceAnalysis(String considerAdvanceAnalysis) {
+        this.considerAdvanceAnalysis = considerAdvanceAnalysis;
     }
     
     public LocalDate getCreatedDate() {

@@ -65,6 +65,8 @@ CREATE TABLE t_comp_parties (
     date_of_birth DATE,
     civil_status VARCHAR2(20),
     preferred_branch VARCHAR2(100),
+    consider_crib VARCHAR2(5),
+    consider_advance_analysis VARCHAR2(5),
     CREATED_DATE DATE,
     CREATED_BY VARCHAR2(100),
     MODIFIED_DATE DATE,
