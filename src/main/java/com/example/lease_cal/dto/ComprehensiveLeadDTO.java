@@ -1,62 +1,25 @@
-package com.example.lease_cal.entity;
+package com.example.lease_cal.dto;
 
-import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
-@Table(name = "t_comp_lead")
-public class Lead {
+public class ComprehensiveLeadDTO {
     
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "comp_lead_seq")
-    @SequenceGenerator(name = "comp_lead_seq", sequenceName = "seq_comp_lead_id", allocationSize = 1)
-    @Column(name = "comp_lead_id")
     private Long compLeadId;
-    
-    @Column(name = "lead_name", nullable = false, length = 255)
     private String leadName;
-    
-    @Column(name = "creation_type", length = 50)
     private String creationType;
-    
-    @Column(name = "CREATED_DATE")
     private LocalDate createdDate;
-    
-    @Column(name = "CREATED_BY", length = 100)
     private String createdBy;
-    
-    @Column(name = "MODIFIED_DATE")
     private LocalDate modifiedDate;
-    
-    @Column(name = "MODIFIED_BY", length = 100)
     private String modifiedBy;
-    
-    @OneToMany(mappedBy = "lead", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Party> parties = new ArrayList<>();
-    
-    @OneToMany(mappedBy = "lead", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<RelatedParty> relatedParties = new ArrayList<>();
-    
-    @PrePersist
-    protected void onCreate() {
-        if (createdDate == null) {
-            createdDate = LocalDate.now();
-        }
-    }
-    
-    @PreUpdate
-    protected void onUpdate() {
-        modifiedDate = LocalDate.now();
-    }
+    private List<PartyDTO> parties;
+    private List<RelatedPartyDTO> relatedParties;
     
     // Constructors
-    public Lead() {
-    }
-    
-    public Lead(String leadName) {
-        this.leadName = leadName;
+    public ComprehensiveLeadDTO() {
+        this.parties = new ArrayList<>();
+        this.relatedParties = new ArrayList<>();
     }
     
     // Getters and Setters
@@ -116,20 +79,19 @@ public class Lead {
         this.modifiedBy = modifiedBy;
     }
     
-    public List<Party> getParties() {
+    public List<PartyDTO> getParties() {
         return parties;
     }
     
-    public void setParties(List<Party> parties) {
+    public void setParties(List<PartyDTO> parties) {
         this.parties = parties;
     }
     
-    public List<RelatedParty> getRelatedParties() {
+    public List<RelatedPartyDTO> getRelatedParties() {
         return relatedParties;
     }
     
-    public void setRelatedParties(List<RelatedParty> relatedParties) {
+    public void setRelatedParties(List<RelatedPartyDTO> relatedParties) {
         this.relatedParties = relatedParties;
     }
 }
-

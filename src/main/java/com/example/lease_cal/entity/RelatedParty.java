@@ -14,7 +14,7 @@ public class RelatedParty {
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "comp_lead_id")
-    private Lead lead;
+    private ComprehensiveLead lead;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "main_partner_id")
@@ -37,7 +37,7 @@ public class RelatedParty {
     public RelatedParty() {
     }
     
-    public RelatedParty(Lead lead, Party mainParty, Party relatedParty) {
+    public RelatedParty(ComprehensiveLead lead, Party mainParty, Party relatedParty) {
         this.lead = lead;
         this.mainParty = mainParty;
         this.relatedParty = relatedParty;
@@ -52,11 +52,11 @@ public class RelatedParty {
         this.relatedPartyId = relatedPartyId;
     }
     
-    public Lead getLead() {
+    public ComprehensiveLead getLead() {
         return lead;
     }
     
-    public void setLead(Lead lead) {
+    public void setLead(ComprehensiveLead lead) {
         this.lead = lead;
     }
     

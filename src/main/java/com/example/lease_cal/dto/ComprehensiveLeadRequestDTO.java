@@ -3,7 +3,7 @@ package com.example.lease_cal.dto;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LeadRequestDTO {
+public class ComprehensiveLeadRequestDTO {
     
     private String leadName;
     private String creationType;
@@ -12,7 +12,7 @@ public class LeadRequestDTO {
     private List<RelatedPartyRequestDTO> relatedParties;
     
     // Constructors
-    public LeadRequestDTO() {
+    public ComprehensiveLeadRequestDTO() {
         this.parties = new ArrayList<>();
         this.relatedParties = new ArrayList<>();
     }
@@ -58,4 +58,3 @@ public class LeadRequestDTO {
         this.relatedParties = relatedParties;
     }
 }
-

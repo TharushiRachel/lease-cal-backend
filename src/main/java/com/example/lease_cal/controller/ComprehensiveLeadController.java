@@ -1,7 +1,7 @@
 package com.example.lease_cal.controller;
 
 import com.example.lease_cal.dto.*;
-import com.example.lease_cal.service.LeadService;
+import com.example.lease_cal.service.ComprehensiveLeadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,30 +10,30 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/leads")
+@RequestMapping("/api/comprehensive-leads")
 @CrossOrigin(origins = "*")
-public class LeadController {
+public class ComprehensiveLeadController {
     
     @Autowired
-    private LeadService leadService;
+    private ComprehensiveLeadService comprehensiveLeadService;
     
     /**
-     * Create a new lead with parties, identifications, and addresses only
+     * Create a new comprehensive lead with parties, identifications, and addresses only
      * 
-     * @param leadRequestDTO The lead request DTO containing lead and party data
-     * @return ResponseEntity with LeadDTO and HTTP status
+     * @param comprehensiveLeadRequestDTO The comprehensive lead request DTO containing lead and party data
+     * @return ResponseEntity with ComprehensiveLeadDTO and HTTP status
      */
     @PostMapping
-    public ResponseEntity<?> saveLeadWithChildren(@RequestBody LeadRequestDTO leadRequestDTO) {
+    public ResponseEntity<?> saveLeadWithChildren(@RequestBody ComprehensiveLeadRequestDTO comprehensiveLeadRequestDTO) {
         try {
-            LeadDTO savedLead = leadService.saveLeadWithChildren(leadRequestDTO);
+            ComprehensiveLeadDTO savedLead = comprehensiveLeadService.saveLeadWithChildren(comprehensiveLeadRequestDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body(savedLead);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new ErrorResponse("Validation Error", e.getMessage()));
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ErrorResponse("Error saving lead", e.getMessage()));
+                    .body(new ErrorResponse("Error saving comprehensive lead", e.getMessage()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new ErrorResponse("Unexpected error", e.getMessage()));
@@ -52,7 +52,7 @@ public class LeadController {
             @PathVariable Long partyId,
             @RequestBody List<IncomeSourceRequestDTO> incomeSourceRequestDTOs) {
         try {
-            List<IncomeSourceDTO> savedIncomeSources = leadService.saveIncomeSources(
+            List<IncomeSourceDTO> savedIncomeSources = comprehensiveLeadService.saveIncomeSources(
                     partyId, 
                     incomeSourceRequestDTOs
             );
@@ -67,9 +67,9 @@ public class LeadController {
     }
     
     /**
-     * Save related parties for a lead
+     * Save related parties for a comprehensive lead
      * 
-     * @param leadId The ID of the lead
+     * @param leadId The ID of the comprehensive lead
      * @param relatedPartyRequestDTOs List of related party request DTOs
      * @return ResponseEntity with list of RelatedPartyDTO and HTTP status
      */
@@ -78,7 +78,7 @@ public class LeadController {
             @PathVariable Long leadId,
             @RequestBody List<RelatedPartyRequestDTO> relatedPartyRequestDTOs) {
         try {
-            List<RelatedPartyDTO> savedRelatedParties = leadService.saveRelatedParties(
+            List<RelatedPartyDTO> savedRelatedParties = comprehensiveLeadService.saveRelatedParties(
                     leadId, 
                     relatedPartyRequestDTOs
             );
@@ -93,22 +93,22 @@ public class LeadController {
     }
     
     /**
-     * Get a lead by ID with all child entities
+     * Get a comprehensive lead by ID with all child entities
      * 
-     * @param leadId The ID of the lead to retrieve
-     * @return ResponseEntity with LeadDTO and HTTP status
+     * @param leadId The ID of the comprehensive lead to retrieve
+     * @return ResponseEntity with ComprehensiveLeadDTO and HTTP status
      */
     @GetMapping("/{leadId}")
-    public ResponseEntity<?> getLeadById(@PathVariable Long leadId) {
+    public ResponseEntity<?> getComprehensiveLeadById(@PathVariable Long leadId) {
         try {
-            LeadDTO leadDTO = leadService.getLeadById(leadId);
-            return ResponseEntity.ok(leadDTO);
+            ComprehensiveLeadDTO comprehensiveLeadDTO = comprehensiveLeadService.getComprehensiveLeadById(leadId);
+            return ResponseEntity.ok(comprehensiveLeadDTO);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new ErrorResponse("Lead not found", e.getMessage()));
+                    .body(new ErrorResponse("Comprehensive Lead not found", e.getMessage()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ErrorResponse("Error retrieving lead", e.getMessage()));
+                    .body(new ErrorResponse("Error retrieving comprehensive lead", e.getMessage()));
         }
     }
     
@@ -141,4 +141,3 @@ public class LeadController {
         }
     }
 }
-

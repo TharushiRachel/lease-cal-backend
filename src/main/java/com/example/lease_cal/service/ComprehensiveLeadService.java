@@ -14,10 +14,10 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
-public class LeadService {
+public class ComprehensiveLeadService {
     
     @Autowired
-    private LeadRepository leadRepository;
+    private ComprehensiveLeadRepository comprehensiveLeadRepository;
     
     @Autowired
     private PartyRepository partyRepository;
@@ -32,35 +32,35 @@ public class LeadService {
      * Save a lead with parties, identifications, and addresses only
      * Income sources and related parties should be saved separately
      * 
-     * @param leadRequestDTO The lead request DTO containing lead and party data
-     * @return LeadDTO with saved data including IDs
+     * @param comprehensiveLeadRequestDTO The comprehensive lead request DTO containing lead and party data
+     * @return ComprehensiveLeadDTO with saved data including IDs
      */
-    public LeadDTO saveLeadWithChildren(LeadRequestDTO leadRequestDTO) {
-        // Create and save Lead entity
-        Lead lead = new Lead();
-        lead.setLeadName(leadRequestDTO.getLeadName());
-        lead.setCreationType(leadRequestDTO.getCreationType());
-        lead.setCreatedBy(leadRequestDTO.getCreatedBy());
-        lead.setCreatedDate(LocalDate.now());
+    public ComprehensiveLeadDTO saveLeadWithChildren(ComprehensiveLeadRequestDTO comprehensiveLeadRequestDTO) {
+        // Create and save ComprehensiveLead entity
+        ComprehensiveLead comprehensiveLead = new ComprehensiveLead();
+        comprehensiveLead.setLeadName(comprehensiveLeadRequestDTO.getLeadName());
+        comprehensiveLead.setCreationType(comprehensiveLeadRequestDTO.getCreationType());
+        comprehensiveLead.setCreatedBy(comprehensiveLeadRequestDTO.getCreatedBy());
+        comprehensiveLead.setCreatedDate(LocalDate.now());
         
-        // Save lead first to get the ID
-        lead = leadRepository.save(lead);
+        // Save comprehensive lead first to get the ID
+        comprehensiveLead = comprehensiveLeadRepository.save(comprehensiveLead);
         
         // Convert and save parties with identifications and addresses only
-        if (leadRequestDTO.getParties() != null && !leadRequestDTO.getParties().isEmpty()) {
+        if (comprehensiveLeadRequestDTO.getParties() != null && !comprehensiveLeadRequestDTO.getParties().isEmpty()) {
             List<Party> parties = new ArrayList<>();
-            for (PartyRequestDTO partyRequestDTO : leadRequestDTO.getParties()) {
-                Party party = convertToPartyEntity(partyRequestDTO, lead);
+            for (PartyRequestDTO partyRequestDTO : comprehensiveLeadRequestDTO.getParties()) {
+                Party party = convertToPartyEntity(partyRequestDTO, comprehensiveLead);
                 parties.add(party);
             }
-            lead.setParties(parties);
+            comprehensiveLead.setParties(parties);
         }
         
-        // Save lead again with parties (cascade will save identifications and addresses)
-        lead = leadRepository.save(lead);
+        // Save comprehensive lead again with parties (cascade will save identifications and addresses)
+        comprehensiveLead = comprehensiveLeadRepository.save(comprehensiveLead);
         
         // Convert to DTO and return
-        return convertToLeadDTO(lead);
+        return convertToComprehensiveLeadDTO(comprehensiveLead);
     }
     
     /**
@@ -102,14 +102,14 @@ public class LeadService {
      * @return List of saved RelatedPartyDTOs
      */
     public List<RelatedPartyDTO> saveRelatedParties(Long leadId, List<RelatedPartyRequestDTO> relatedPartyRequestDTOs) {
-        // Find the lead
-        Lead lead = leadRepository.findById(leadId)
-                .orElseThrow(() -> new RuntimeException("Lead not found with id: " + leadId));
+        // Find the comprehensive lead
+        ComprehensiveLead comprehensiveLead = comprehensiveLeadRepository.findById(leadId)
+                .orElseThrow(() -> new RuntimeException("Comprehensive Lead not found with id: " + leadId));
         
         // Convert and save related parties
         List<RelatedParty> relatedParties = new ArrayList<>();
         for (RelatedPartyRequestDTO relatedPartyRequestDTO : relatedPartyRequestDTOs) {
-            RelatedParty relatedParty = convertToRelatedPartyEntity(relatedPartyRequestDTO, lead);
+            RelatedParty relatedParty = convertToRelatedPartyEntity(relatedPartyRequestDTO, comprehensiveLead);
             relatedParties.add(relatedParty);
         }
         
@@ -126,9 +126,9 @@ public class LeadService {
      * Convert RelatedPartyRequestDTO to RelatedParty entity
      * Note: This method expects that parties are already saved and have IDs
      */
-    private RelatedParty convertToRelatedPartyEntity(RelatedPartyRequestDTO relatedPartyRequestDTO, Lead lead) {
+    private RelatedParty convertToRelatedPartyEntity(RelatedPartyRequestDTO relatedPartyRequestDTO, ComprehensiveLead comprehensiveLead) {
         RelatedParty relatedParty = new RelatedParty();
-        relatedParty.setLead(lead);
+        relatedParty.setLead(comprehensiveLead);
         relatedParty.setRelationshipDescription(relatedPartyRequestDTO.getRelationshipDescription());
         relatedParty.setConsiderCrib(relatedPartyRequestDTO.getConsiderCrib());
         relatedParty.setConsiderAdvanceAnalysis(relatedPartyRequestDTO.getConsiderAdvanceAnalysis());
@@ -152,9 +152,9 @@ public class LeadService {
     /**
      * Convert PartyRequestDTO to Party entity
      */
-    private Party convertToPartyEntity(com.example.lease_cal.dto.PartyRequestDTO partyRequestDTO, Lead lead) {
+    private Party convertToPartyEntity(PartyRequestDTO partyRequestDTO, ComprehensiveLead comprehensiveLead) {
         Party party = new Party();
-        party.setLead(lead);
+        party.setLead(comprehensiveLead);
         party.setPartyType(partyRequestDTO.getPartyType());
         party.setPersonalName(partyRequestDTO.getPersonalName());
         party.setEmail(partyRequestDTO.getEmail());
@@ -200,37 +200,37 @@ public class LeadService {
     }
     
     /**
-     * Convert Lead entity to LeadDTO
+     * Convert ComprehensiveLead entity to ComprehensiveLeadDTO
      */
-    private LeadDTO convertToLeadDTO(Lead lead) {
-        LeadDTO leadDTO = new LeadDTO();
-        leadDTO.setCompLeadId(lead.getCompLeadId());
-        leadDTO.setLeadName(lead.getLeadName());
-        leadDTO.setCreationType(lead.getCreationType());
-        leadDTO.setCreatedDate(lead.getCreatedDate());
-        leadDTO.setCreatedBy(lead.getCreatedBy());
-        leadDTO.setModifiedDate(lead.getModifiedDate());
-        leadDTO.setModifiedBy(lead.getModifiedBy());
+    private ComprehensiveLeadDTO convertToComprehensiveLeadDTO(ComprehensiveLead comprehensiveLead) {
+        ComprehensiveLeadDTO comprehensiveLeadDTO = new ComprehensiveLeadDTO();
+        comprehensiveLeadDTO.setCompLeadId(comprehensiveLead.getCompLeadId());
+        comprehensiveLeadDTO.setLeadName(comprehensiveLead.getLeadName());
+        comprehensiveLeadDTO.setCreationType(comprehensiveLead.getCreationType());
+        comprehensiveLeadDTO.setCreatedDate(comprehensiveLead.getCreatedDate());
+        comprehensiveLeadDTO.setCreatedBy(comprehensiveLead.getCreatedBy());
+        comprehensiveLeadDTO.setModifiedDate(comprehensiveLead.getModifiedDate());
+        comprehensiveLeadDTO.setModifiedBy(comprehensiveLead.getModifiedBy());
         
         // Convert parties
-        if (lead.getParties() != null) {
+        if (comprehensiveLead.getParties() != null) {
             List<PartyDTO> partyDTOs = new ArrayList<>();
-            for (Party party : lead.getParties()) {
+            for (Party party : comprehensiveLead.getParties()) {
                 partyDTOs.add(convertToPartyDTO(party));
             }
-            leadDTO.setParties(partyDTOs);
+            comprehensiveLeadDTO.setParties(partyDTOs);
         }
         
         // Convert related parties
-        if (lead.getRelatedParties() != null) {
+        if (comprehensiveLead.getRelatedParties() != null) {
             List<RelatedPartyDTO> relatedPartyDTOs = new ArrayList<>();
-            for (RelatedParty relatedParty : lead.getRelatedParties()) {
+            for (RelatedParty relatedParty : comprehensiveLead.getRelatedParties()) {
                 relatedPartyDTOs.add(convertToRelatedPartyDTO(relatedParty));
             }
-            leadDTO.setRelatedParties(relatedPartyDTOs);
+            comprehensiveLeadDTO.setRelatedParties(relatedPartyDTOs);
         }
         
-        return leadDTO;
+        return comprehensiveLeadDTO;
     }
     
     /**
@@ -339,12 +339,11 @@ public class LeadService {
     }
     
     /**
-     * Get lead by ID with all child entities
+     * Get comprehensive lead by ID with all child entities
      */
-    public LeadDTO getLeadById(Long leadId) {
-        Lead lead = leadRepository.findById(leadId)
-                .orElseThrow(() -> new RuntimeException("Lead not found with id: " + leadId));
-        return convertToLeadDTO(lead);
+    public ComprehensiveLeadDTO getComprehensiveLeadById(Long leadId) {
+        ComprehensiveLead comprehensiveLead = comprehensiveLeadRepository.findById(leadId)
+                .orElseThrow(() -> new RuntimeException("Comprehensive Lead not found with id: " + leadId));
+        return convertToComprehensiveLeadDTO(comprehensiveLead);
     }
 }
-
