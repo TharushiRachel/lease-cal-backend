@@ -1,0 +1,14 @@
+[
+  {
+    "incomeType": "SALARY",
+    "considerForRepayment": "Y"
+  },
+  {
+    "incomeType": "RENTAL",
+    "considerForRepayment": "N"
+  },
+  {
+    "incomeType": "BUSINESS",
+    "considerForRepayment": "Y"
+  }
+]
