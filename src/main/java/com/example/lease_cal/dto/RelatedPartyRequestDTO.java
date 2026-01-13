@@ -2,10 +2,12 @@ package com.example.lease_cal.dto;
 
 public class RelatedPartyRequestDTO {
     
+    private Boolean isRelationShip;
     private Long compLeadId;
     private Long mainPartnerId;
     private Long relatedPartnerId;
     private String relationshipDescription;
+    private Double sharePresentage;
     private String considerCrib;
     private String considerAdvanceAnalysis;
     
@@ -14,6 +16,14 @@ public class RelatedPartyRequestDTO {
     }
     
     // Getters and Setters
+    public Boolean getIsRelationShip() {
+        return isRelationShip;
+    }
+    
+    public void setIsRelationShip(Boolean isRelationShip) {
+        this.isRelationShip = isRelationShip;
+    }
+    
     public Long getCompLeadId() {
         return compLeadId;
     }
@@ -44,6 +54,14 @@ public class RelatedPartyRequestDTO {
     
     public void setRelationshipDescription(String relationshipDescription) {
         this.relationshipDescription = relationshipDescription;
+    }
+    
+    public Double getSharePresentage() {
+        return sharePresentage;
+    }
+    
+    public void setSharePresentage(Double sharePresentage) {
+        this.sharePresentage = sharePresentage;
     }
     
     public String getConsiderCrib() {

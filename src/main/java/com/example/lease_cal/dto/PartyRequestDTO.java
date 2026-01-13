@@ -7,6 +7,7 @@ import java.util.List;
 public class PartyRequestDTO {
     
     private Long compLeadId;
+    private String creationType;
     private String partyType;
     private String personalName;
     private String email;
@@ -14,8 +15,9 @@ public class PartyRequestDTO {
     private LocalDate dateOfBirth;
     private String civilStatus;
     private String preferredBranch;
-    private String considerCrib;
-    private String considerAdvanceAnalysis;
+    private Long accountNumber;
+    private Boolean considerCrib;
+    private Boolean considerAA;
     private String createdBy;
     private List<PartyIdentificationRequestDTO> identifications;
     private List<PartyAddressRequestDTO> addresses;
@@ -85,6 +87,14 @@ public class PartyRequestDTO {
         this.civilStatus = civilStatus;
     }
     
+    public String getCreationType() {
+        return creationType;
+    }
+    
+    public void setCreationType(String creationType) {
+        this.creationType = creationType;
+    }
+    
     public String getPreferredBranch() {
         return preferredBranch;
     }
@@ -93,20 +103,28 @@ public class PartyRequestDTO {
         this.preferredBranch = preferredBranch;
     }
     
-    public String getConsiderCrib() {
+    public Long getAccountNumber() {
+        return accountNumber;
+    }
+    
+    public void setAccountNumber(Long accountNumber) {
+        this.accountNumber = accountNumber;
+    }
+    
+    public Boolean getConsiderCrib() {
         return considerCrib;
     }
     
-    public void setConsiderCrib(String considerCrib) {
+    public void setConsiderCrib(Boolean considerCrib) {
         this.considerCrib = considerCrib;
     }
     
-    public String getConsiderAdvanceAnalysis() {
-        return considerAdvanceAnalysis;
+    public Boolean getConsiderAA() {
+        return considerAA;
     }
     
-    public void setConsiderAdvanceAnalysis(String considerAdvanceAnalysis) {
-        this.considerAdvanceAnalysis = considerAdvanceAnalysis;
+    public void setConsiderAA(Boolean considerAA) {
+        this.considerAA = considerAA;
     }
     
     public String getCreatedBy() {

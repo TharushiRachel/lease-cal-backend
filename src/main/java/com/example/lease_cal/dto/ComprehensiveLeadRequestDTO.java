@@ -6,7 +6,6 @@ import java.util.List;
 public class ComprehensiveLeadRequestDTO {
     
     private String leadName;
-    private String creationType;
     private String createdBy;
     private List<PartyRequestDTO> parties;
     private List<RelatedPartyRequestDTO> relatedParties;
@@ -24,14 +23,6 @@ public class ComprehensiveLeadRequestDTO {
     
     public void setLeadName(String leadName) {
         this.leadName = leadName;
-    }
-    
-    public String getCreationType() {
-        return creationType;
-    }
-    
-    public void setCreationType(String creationType) {
-        this.creationType = creationType;
     }
     
     public String getCreatedBy() {

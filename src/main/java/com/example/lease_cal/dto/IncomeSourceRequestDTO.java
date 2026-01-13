@@ -2,6 +2,7 @@ package com.example.lease_cal.dto;
 
 public class IncomeSourceRequestDTO {
     
+    private String party;
     private String incomeType;
     private String considerForRepayment;
     
@@ -10,6 +11,14 @@ public class IncomeSourceRequestDTO {
     }
     
     // Getters and Setters
+    public String getParty() {
+        return party;
+    }
+    
+    public void setParty(String party) {
+        this.party = party;
+    }
+    
     public String getIncomeType() {
         return incomeType;
     }

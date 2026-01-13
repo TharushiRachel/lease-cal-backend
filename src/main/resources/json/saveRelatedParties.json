@@ -1,18 +1,10 @@
 [
   {
-    "compLeadId": 1,
-    "mainPartnerId": 1,
+    "isRelationShip": true,
+    "compLeadId": 2,
+    "mainPartnerId": 2,
     "relatedPartnerId": 2,
     "relationshipDescription": "Spouse",
-    "considerCrib": "Y",
-    "considerAdvanceAnalysis": "N"
-  },
-  {
-    "compLeadId": 1,
-    "mainPartnerId": 1,
-    "relatedPartnerId": 3,
-    "relationshipDescription": "Business Partner",
-    "considerCrib": "Y",
-    "considerAdvanceAnalysis": "Y"
+    "sharePresentage": 50.0
   }
 ]

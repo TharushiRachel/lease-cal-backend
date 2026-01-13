@@ -39,7 +39,7 @@ public class ComprehensiveLeadService {
         // Create and save ComprehensiveLead entity
         ComprehensiveLead comprehensiveLead = new ComprehensiveLead();
         comprehensiveLead.setLeadName(comprehensiveLeadRequestDTO.getLeadName());
-        comprehensiveLead.setCreationType(comprehensiveLeadRequestDTO.getCreationType());
+        // creationType is now at party level, not lead level
         comprehensiveLead.setCreatedBy(comprehensiveLeadRequestDTO.getCreatedBy());
         comprehensiveLead.setCreatedDate(LocalDate.now());
         
@@ -130,6 +130,8 @@ public class ComprehensiveLeadService {
         RelatedParty relatedParty = new RelatedParty();
         relatedParty.setLead(comprehensiveLead);
         relatedParty.setRelationshipDescription(relatedPartyRequestDTO.getRelationshipDescription());
+        // Note: isRelationShip and sharePresentage are not yet in the entity/database
+        // They are accepted in the DTO but won't be persisted until added to the schema
         relatedParty.setConsiderCrib(relatedPartyRequestDTO.getConsiderCrib());
         relatedParty.setConsiderAdvanceAnalysis(relatedPartyRequestDTO.getConsiderAdvanceAnalysis());
         
@@ -162,10 +164,20 @@ public class ComprehensiveLeadService {
         party.setDateOfBirth(partyRequestDTO.getDateOfBirth());
         party.setCivilStatus(partyRequestDTO.getCivilStatus());
         party.setPreferredBranch(partyRequestDTO.getPreferredBranch());
-        party.setConsiderCrib(partyRequestDTO.getConsiderCrib());
-        party.setConsiderAdvanceAnalysis(partyRequestDTO.getConsiderAdvanceAnalysis());
+        // Convert Boolean to String for considerCrib and considerAA
+        if (partyRequestDTO.getConsiderCrib() != null) {
+            party.setConsiderCrib(partyRequestDTO.getConsiderCrib() ? "Y" : "N");
+        }
+        if (partyRequestDTO.getConsiderAA() != null) {
+            party.setConsiderAdvanceAnalysis(partyRequestDTO.getConsiderAA() ? "Y" : "N");
+        }
         party.setCreatedBy(partyRequestDTO.getCreatedBy());
         party.setCreatedDate(LocalDate.now());
+        
+        // Set creationType on the lead if provided in party (use first party's creationType)
+        if (partyRequestDTO.getCreationType() != null && comprehensiveLead.getCreationType() == null) {
+            comprehensiveLead.setCreationType(partyRequestDTO.getCreationType());
+        }
         
         // Convert and set identifications
         if (partyRequestDTO.getIdentifications() != null) {
@@ -329,6 +341,8 @@ public class ComprehensiveLeadService {
     private RelatedPartyDTO convertToRelatedPartyDTO(RelatedParty relatedParty) {
         RelatedPartyDTO dto = new RelatedPartyDTO();
         dto.setRelatedPartyId(relatedParty.getRelatedPartyId());
+        // Note: isRelationShip and sharePresentage are not yet in the entity
+        // They will be null in the response until added to the entity/database
         dto.setCompLeadId(relatedParty.getLead() != null ? relatedParty.getLead().getCompLeadId() : null);
         dto.setMainPartnerId(relatedParty.getMainParty() != null ? relatedParty.getMainParty().getCompPartyId() : null);
         dto.setRelatedPartnerId(relatedParty.getRelatedParty() != null ? relatedParty.getRelatedParty().getCompPartyId() : null);

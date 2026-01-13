@@ -1,19 +1,19 @@
 {
   "leadName": "John Doe Lead",
-  "creationType": "PERSONAL",
-  "createdBy": "admin",
   "parties": [
     {
-      "compLeadId": null,
+      "creationType": "PERSONAL",
       "partyType": "BORROWER",
+      "preferredBranch": "Colombo Branch",
+      "accountNumber": 123456789,
+      "civilStatus": "MARRIED",
+      "dateOfBirth": "1990-01-15",
+      "considerCrib": true,
+      "considerAA": true,
+      "compLeadId": null,
       "personalName": "John Doe",
       "email": "john@example.com",
       "mobileNumber": "1234567890",
-      "dateOfBirth": "1980-01-15",
-      "civilStatus": "MARRIED",
-      "preferredBranch": "Colombo Main",
-      "considerCrib": "Y",
-      "considerAdvanceAnalysis": "N",
       "createdBy": "admin",
       "identifications": [
         {
@@ -22,42 +22,14 @@
           "createdBy": "admin"
         },
         {
-          "identificationType": "PASSPORT",
-          "identificationNumber": "P1234567",
-          "createdBy": "admin"
-        }
-      ],
-      "addresses": [
-        {
-          "address": "123 Main Street, Colombo 05"
-        },
-        {
-          "address": "456 Business Park, Kandy"
-        }
-      ]
-    },
-    {
-      "compLeadId": null,
-      "partyType": "NON_BORROWER",
-      "personalName": "Jane Doe",
-      "email": "jane@example.com",
-      "mobileNumber": "0987654321",
-      "dateOfBirth": "1982-05-20",
-      "civilStatus": "MARRIED",
-      "preferredBranch": "Colombo Main",
-      "considerCrib": "Y",
-      "considerAdvanceAnalysis": "Y",
-      "createdBy": "admin",
-      "identifications": [
-        {
           "identificationType": "NIC",
-          "identificationNumber": "987654321V",
+          "identificationNumber": "123456785V",
           "createdBy": "admin"
         }
       ],
       "addresses": [
         {
-          "address": "123 Main Street, Colombo 05"
+          "address": "123 Main Street, Colombo"
         }
       ]
     }
