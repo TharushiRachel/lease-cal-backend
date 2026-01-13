@@ -1,14 +1,50 @@
 -- =========================================================
 -- APPLICATION TABLES LINKED TO COMPREHENSIVE LEAD
--- Note: This schema uses comp_lead_id to link with t_comp_lead table
+-- Note: This schema uses Oracle data types to match t_comp_lead structure
 -- =========================================================
 
 -- =========================================================
--- 1. INDIVIDUAL APPLICANT DETAILS
+-- 1. CORE APPLICATION TABLE
+-- =========================================================
+CREATE TABLE application (
+    application_id NUMBER PRIMARY KEY,
+    comp_lead_id NUMBER,
+    application_type VARCHAR2(20) NOT NULL, -- 'INDIVIDUAL' or 'COMPANY'
+    branch_code VARCHAR2(50),
+    branch_name VARCHAR2(255),
+    application_date DATE,
+    status VARCHAR2(20) DEFAULT 'DRAFT', -- 'DRAFT','SUBMITTED','APPROVED','REJECTED'
+    CREATED_BY VARCHAR2(100),
+    CREATED_DATE DATE,
+    MODIFIED_DATE DATE,
+    MODIFIED_BY VARCHAR2(100),
+    CONSTRAINT fk_application_lead FOREIGN KEY (comp_lead_id) REFERENCES t_comp_lead(comp_lead_id)
+);
+
+-- Sequence for application
+CREATE SEQUENCE seq_application_id
+    START WITH 1
+    INCREMENT BY 1
+    NOCACHE
+    NOCYCLE;
+
+-- Trigger for application
+CREATE OR REPLACE TRIGGER trg_application_id
+    BEFORE INSERT ON application
+    FOR EACH ROW
+BEGIN
+    IF :NEW.application_id IS NULL THEN
+        :NEW.application_id := seq_application_id.NEXTVAL;
+    END IF;
+END;
+/
+
+-- =========================================================
+-- 2. INDIVIDUAL APPLICANT DETAILS
 -- =========================================================
 CREATE TABLE applicant_individual (
     applicant_id NUMBER PRIMARY KEY,
-    comp_lead_id NUMBER,
+    application_id NUMBER,
     full_name VARCHAR2(255),
     date_of_birth DATE,
     nic_passport_no VARCHAR2(50),
@@ -27,7 +63,7 @@ CREATE TABLE applicant_individual (
     CREATED_BY VARCHAR2(100),
     MODIFIED_DATE DATE,
     MODIFIED_BY VARCHAR2(100),
-    CONSTRAINT fk_applicant_individual_lead FOREIGN KEY (comp_lead_id) REFERENCES t_comp_lead(comp_lead_id)
+    CONSTRAINT fk_applicant_individual_app FOREIGN KEY (application_id) REFERENCES application(application_id)
 );
 
 -- Sequence for applicant_individual
@@ -49,11 +85,11 @@ END;
 /
 
 -- =========================================================
--- 2. COMPANY APPLICANT DETAILS
+-- 3. COMPANY APPLICANT DETAILS
 -- =========================================================
 CREATE TABLE applicant_company (
     company_id NUMBER PRIMARY KEY,
-    comp_lead_id NUMBER,
+    application_id NUMBER,
     name VARCHAR2(255),
     address VARCHAR2(2000),
     registration_no VARCHAR2(100),
@@ -67,7 +103,7 @@ CREATE TABLE applicant_company (
     CREATED_BY VARCHAR2(100),
     MODIFIED_DATE DATE,
     MODIFIED_BY VARCHAR2(100),
-    CONSTRAINT fk_applicant_company_lead FOREIGN KEY (comp_lead_id) REFERENCES t_comp_lead(comp_lead_id)
+    CONSTRAINT fk_applicant_company_app FOREIGN KEY (application_id) REFERENCES application(application_id)
 );
 
 -- Sequence for applicant_company
@@ -89,7 +125,7 @@ END;
 /
 
 -- =========================================================
--- 3. DIRECTORS / PARTNERS
+-- 4. DIRECTORS / PARTNERS
 -- =========================================================
 CREATE TABLE company_director (
     director_id NUMBER PRIMARY KEY,
@@ -125,7 +161,7 @@ END;
 /
 
 -- =========================================================
--- 4. EMPLOYMENT DETAILS (FOR INDIVIDUALS)
+-- 5. EMPLOYMENT DETAILS (FOR INDIVIDUALS)
 -- =========================================================
 CREATE TABLE employment_details (
     employment_id NUMBER PRIMARY KEY,
@@ -164,11 +200,11 @@ END;
 /
 
 -- =========================================================
--- 5. FACILITY REQUEST DETAILS
+-- 6. FACILITY REQUEST DETAILS
 -- =========================================================
 CREATE TABLE facility_request (
     facility_id NUMBER PRIMARY KEY,
-    comp_lead_id NUMBER,
+    application_id NUMBER,
     type VARCHAR2(100),
     purpose VARCHAR2(2000),
     amount NUMBER(18,2),
@@ -181,7 +217,7 @@ CREATE TABLE facility_request (
     CREATED_BY VARCHAR2(100),
     MODIFIED_DATE DATE,
     MODIFIED_BY VARCHAR2(100),
-    CONSTRAINT fk_facility_lead FOREIGN KEY (comp_lead_id) REFERENCES t_comp_lead(comp_lead_id)
+    CONSTRAINT fk_facility_app FOREIGN KEY (application_id) REFERENCES application(application_id)
 );
 
 -- Sequence for facility_request
@@ -203,11 +239,11 @@ END;
 /
 
 -- =========================================================
--- 6. ASSETS
+-- 7. ASSETS
 -- =========================================================
 CREATE TABLE assets (
     asset_id NUMBER PRIMARY KEY,
-    comp_lead_id NUMBER,
+    application_id NUMBER,
     asset_type VARCHAR2(50), -- 'LAND_BUILDING','VEHICLE','SHARE_TBILL','INSURANCE','OTHER'
     description VARCHAR2(2000),
     owner_name VARCHAR2(255),
@@ -217,7 +253,7 @@ CREATE TABLE assets (
     CREATED_BY VARCHAR2(100),
     MODIFIED_DATE DATE,
     MODIFIED_BY VARCHAR2(100),
-    CONSTRAINT fk_assets_lead FOREIGN KEY (comp_lead_id) REFERENCES t_comp_lead(comp_lead_id)
+    CONSTRAINT fk_assets_app FOREIGN KEY (application_id) REFERENCES application(application_id)
 );
 
 -- Sequence for assets
@@ -239,11 +275,11 @@ END;
 /
 
 -- =========================================================
--- 7. LIABILITIES
+-- 8. LIABILITIES
 -- =========================================================
 CREATE TABLE liabilities (
     liability_id NUMBER PRIMARY KEY,
-    comp_lead_id NUMBER,
+    application_id NUMBER,
     creditor_name VARCHAR2(255),
     reference_no VARCHAR2(100),
     purpose VARCHAR2(255),
@@ -255,7 +291,7 @@ CREATE TABLE liabilities (
     CREATED_BY VARCHAR2(100),
     MODIFIED_DATE DATE,
     MODIFIED_BY VARCHAR2(100),
-    CONSTRAINT fk_liabilities_lead FOREIGN KEY (comp_lead_id) REFERENCES t_comp_lead(comp_lead_id)
+    CONSTRAINT fk_liabilities_app FOREIGN KEY (application_id) REFERENCES application(application_id)
 );
 
 -- Sequence for liabilities
@@ -277,11 +313,11 @@ END;
 /
 
 -- =========================================================
--- 8. BANK ACCOUNTS
+-- 9. BANK ACCOUNTS
 -- =========================================================
 CREATE TABLE bank_accounts (
     bank_account_id NUMBER PRIMARY KEY,
-    comp_lead_id NUMBER,
+    application_id NUMBER,
     bank_name VARCHAR2(255),
     branch_name VARCHAR2(255),
     account_no VARCHAR2(50),
@@ -293,7 +329,7 @@ CREATE TABLE bank_accounts (
     CREATED_BY VARCHAR2(100),
     MODIFIED_DATE DATE,
     MODIFIED_BY VARCHAR2(100),
-    CONSTRAINT fk_bank_accounts_lead FOREIGN KEY (comp_lead_id) REFERENCES t_comp_lead(comp_lead_id)
+    CONSTRAINT fk_bank_accounts_app FOREIGN KEY (application_id) REFERENCES application(application_id)
 );
 
 -- Sequence for bank_accounts
@@ -315,7 +351,7 @@ END;
 /
 
 -- =========================================================
--- 9. INCOME & EXPENDITURE
+-- 10. INCOME & EXPENDITURE
 -- =========================================================
 CREATE TABLE income_expenditure (
     record_id NUMBER PRIMARY KEY,
@@ -350,11 +386,11 @@ END;
 /
 
 -- =========================================================
--- 10. TAX DETAILS
+-- 11. TAX DETAILS
 -- =========================================================
 CREATE TABLE income_tax (
     tax_id NUMBER PRIMARY KEY,
-    comp_lead_id NUMBER,
+    application_id NUMBER,
     year_of_assessment NUMBER(4),
     assessable_income NUMBER(18,2),
     taxable_income NUMBER(18,2),
@@ -364,7 +400,7 @@ CREATE TABLE income_tax (
     CREATED_BY VARCHAR2(100),
     MODIFIED_DATE DATE,
     MODIFIED_BY VARCHAR2(100),
-    CONSTRAINT fk_income_tax_lead FOREIGN KEY (comp_lead_id) REFERENCES t_comp_lead(comp_lead_id)
+    CONSTRAINT fk_income_tax_app FOREIGN KEY (application_id) REFERENCES application(application_id)
 );
 
 -- Sequence for income_tax
@@ -386,11 +422,11 @@ END;
 /
 
 -- =========================================================
--- 11. INSURANCE CONSENT
+-- 12. INSURANCE CONSENT
 -- =========================================================
 CREATE TABLE insurance_consent (
     insurance_id NUMBER PRIMARY KEY,
-    comp_lead_id NUMBER,
+    application_id NUMBER,
     consent VARCHAR2(1), -- 'Y' or 'N'
     loan_insurance_required VARCHAR2(1), -- 'Y' or 'N'
     insurance_amount NUMBER(18,2),
@@ -399,7 +435,7 @@ CREATE TABLE insurance_consent (
     CREATED_BY VARCHAR2(100),
     MODIFIED_DATE DATE,
     MODIFIED_BY VARCHAR2(100),
-    CONSTRAINT fk_insurance_consent_lead FOREIGN KEY (comp_lead_id) REFERENCES t_comp_lead(comp_lead_id)
+    CONSTRAINT fk_insurance_consent_app FOREIGN KEY (application_id) REFERENCES application(application_id)
 );
 
 -- Sequence for insurance_consent
@@ -423,14 +459,15 @@ END;
 -- =========================================================
 -- CREATE INDEXES FOR PERFORMANCE
 -- =========================================================
-CREATE INDEX idx_applicant_individual_lead_id ON applicant_individual(comp_lead_id);
-CREATE INDEX idx_applicant_company_lead_id ON applicant_company(comp_lead_id);
+CREATE INDEX idx_application_lead_id ON application(comp_lead_id);
+CREATE INDEX idx_applicant_individual_app_id ON applicant_individual(application_id);
+CREATE INDEX idx_applicant_company_app_id ON applicant_company(application_id);
 CREATE INDEX idx_company_director_company_id ON company_director(company_id);
 CREATE INDEX idx_employment_applicant_id ON employment_details(applicant_id);
-CREATE INDEX idx_facility_lead_id ON facility_request(comp_lead_id);
-CREATE INDEX idx_assets_lead_id ON assets(comp_lead_id);
-CREATE INDEX idx_liabilities_lead_id ON liabilities(comp_lead_id);
-CREATE INDEX idx_bank_accounts_lead_id ON bank_accounts(comp_lead_id);
+CREATE INDEX idx_facility_app_id ON facility_request(application_id);
+CREATE INDEX idx_assets_app_id ON assets(application_id);
+CREATE INDEX idx_liabilities_app_id ON liabilities(application_id);
+CREATE INDEX idx_bank_accounts_app_id ON bank_accounts(application_id);
 CREATE INDEX idx_income_expenditure_applicant_id ON income_expenditure(applicant_id);
-CREATE INDEX idx_income_tax_lead_id ON income_tax(comp_lead_id);
-CREATE INDEX idx_insurance_consent_lead_id ON insurance_consent(comp_lead_id);
+CREATE INDEX idx_income_tax_app_id ON income_tax(application_id);
+CREATE INDEX idx_insurance_consent_app_id ON insurance_consent(application_id);
