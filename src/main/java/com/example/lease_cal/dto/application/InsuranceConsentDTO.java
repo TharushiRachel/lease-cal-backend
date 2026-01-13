@@ -1,20 +1,25 @@
-package com.example.lease_cal.dto;
+package com.example.lease_cal.dto.application;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class InsuranceConsentDTO {
     
+    // Response fields
     private Long insuranceId;
     private Long applicationId;
-    private String consent;
-    private String loanInsuranceRequired;
-    private BigDecimal insuranceAmount;
-    private String insuranceCompany;
     private LocalDate createdDate;
-    private String createdBy;
     private LocalDate modifiedDate;
     private String modifiedBy;
+    
+    // Request/Response fields
+    private Boolean consent; // For request (will be converted to 'Y'/'N' in entity)
+    private String consentString; // For response ('Y'/'N')
+    private Boolean loanInsuranceRequired; // For request (will be converted to 'Y'/'N' in entity)
+    private String loanInsuranceRequiredString; // For response ('Y'/'N')
+    private BigDecimal insuranceAmount;
+    private String insuranceCompany;
+    private String createdBy;
     
     // Constructors
     public InsuranceConsentDTO() {
@@ -37,20 +42,36 @@ public class InsuranceConsentDTO {
         this.applicationId = applicationId;
     }
     
-    public String getConsent() {
+    public Boolean getConsent() {
         return consent;
     }
     
-    public void setConsent(String consent) {
+    public void setConsent(Boolean consent) {
         this.consent = consent;
     }
     
-    public String getLoanInsuranceRequired() {
+    public String getConsentString() {
+        return consentString;
+    }
+    
+    public void setConsentString(String consentString) {
+        this.consentString = consentString;
+    }
+    
+    public Boolean getLoanInsuranceRequired() {
         return loanInsuranceRequired;
     }
     
-    public void setLoanInsuranceRequired(String loanInsuranceRequired) {
+    public void setLoanInsuranceRequired(Boolean loanInsuranceRequired) {
         this.loanInsuranceRequired = loanInsuranceRequired;
+    }
+    
+    public String getLoanInsuranceRequiredString() {
+        return loanInsuranceRequiredString;
+    }
+    
+    public void setLoanInsuranceRequiredString(String loanInsuranceRequiredString) {
+        this.loanInsuranceRequiredString = loanInsuranceRequiredString;
     }
     
     public BigDecimal getInsuranceAmount() {

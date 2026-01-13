@@ -1,12 +1,18 @@
-package com.example.lease_cal.dto;
+package com.example.lease_cal.dto.application;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class LiabilityDTO {
     
+    // Response fields
     private Long liabilityId;
     private Long applicationId;
+    private LocalDate createdDate;
+    private LocalDate modifiedDate;
+    private String modifiedBy;
+    
+    // Request/Response fields
     private String creditorName;
     private String referenceNo;
     private String purpose;
@@ -14,10 +20,7 @@ public class LiabilityDTO {
     private BigDecimal balancePayable;
     private Long repaymentPeriodMonths;
     private String security;
-    private LocalDate createdDate;
     private String createdBy;
-    private LocalDate modifiedDate;
-    private String modifiedBy;
     
     // Constructors
     public LiabilityDTO() {

@@ -1,21 +1,24 @@
-package com.example.lease_cal.dto;
+package com.example.lease_cal.dto.application;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class CompanyDirectorDTO {
     
+    // Response fields
     private Long directorId;
     private Long companyId;
+    private LocalDate createdDate;
+    private LocalDate modifiedDate;
+    private String modifiedBy;
+    
+    // Request/Response fields
     private String name;
     private String address;
     private String nicNo;
     private Long age;
     private BigDecimal shareholdingPercent;
-    private LocalDate createdDate;
     private String createdBy;
-    private LocalDate modifiedDate;
-    private String modifiedBy;
     
     // Constructors
     public CompanyDirectorDTO() {

@@ -1,9 +1,18 @@
-package com.example.lease_cal.dto;
+package com.example.lease_cal.dto.application;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
-public class IncomeTaxRequestDTO {
+public class IncomeTaxDTO {
     
+    // Response fields
+    private Long taxId;
+    private Long applicationId;
+    private LocalDate createdDate;
+    private LocalDate modifiedDate;
+    private String modifiedBy;
+    
+    // Request/Response fields
     private Long yearOfAssessment;
     private BigDecimal assessableIncome;
     private BigDecimal taxableIncome;
@@ -12,10 +21,26 @@ public class IncomeTaxRequestDTO {
     private String createdBy;
     
     // Constructors
-    public IncomeTaxRequestDTO() {
+    public IncomeTaxDTO() {
     }
     
     // Getters and Setters
+    public Long getTaxId() {
+        return taxId;
+    }
+    
+    public void setTaxId(Long taxId) {
+        this.taxId = taxId;
+    }
+    
+    public Long getApplicationId() {
+        return applicationId;
+    }
+    
+    public void setApplicationId(Long applicationId) {
+        this.applicationId = applicationId;
+    }
+    
     public Long getYearOfAssessment() {
         return yearOfAssessment;
     }
@@ -56,11 +81,35 @@ public class IncomeTaxRequestDTO {
         this.remarks = remarks;
     }
     
+    public LocalDate getCreatedDate() {
+        return createdDate;
+    }
+    
+    public void setCreatedDate(LocalDate createdDate) {
+        this.createdDate = createdDate;
+    }
+    
     public String getCreatedBy() {
         return createdBy;
     }
     
     public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
+    }
+    
+    public LocalDate getModifiedDate() {
+        return modifiedDate;
+    }
+    
+    public void setModifiedDate(LocalDate modifiedDate) {
+        this.modifiedDate = modifiedDate;
+    }
+    
+    public String getModifiedBy() {
+        return modifiedBy;
+    }
+    
+    public void setModifiedBy(String modifiedBy) {
+        this.modifiedBy = modifiedBy;
     }
 }

@@ -1,6 +1,6 @@
 package com.example.lease_cal.service;
 
-import com.example.lease_cal.dto.*;
+import com.example.lease_cal.dto.application.*;
 import com.example.lease_cal.entity.*;
 import com.example.lease_cal.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +11,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -59,52 +58,52 @@ public class ApplicationService {
     /**
      * Save application with all child entities
      * 
-     * @param applicationRequestDTO The application request DTO containing all application data
+     * @param applicationDTO The application DTO containing all application data
      * @return ApplicationDTO with saved data including IDs
      */
-    public ApplicationDTO saveApplication(ApplicationRequestDTO applicationRequestDTO) {
+    public ApplicationDTO saveApplication(ApplicationDTO applicationDTO) {
         // Find the comprehensive lead
-        ComprehensiveLead comprehensiveLead = comprehensiveLeadRepository.findById(applicationRequestDTO.getCompLeadId())
-                .orElseThrow(() -> new RuntimeException("Comprehensive Lead not found with id: " + applicationRequestDTO.getCompLeadId()));
+        ComprehensiveLead comprehensiveLead = comprehensiveLeadRepository.findById(applicationDTO.getCompLeadId())
+                .orElseThrow(() -> new RuntimeException("Comprehensive Lead not found with id: " + applicationDTO.getCompLeadId()));
         
         // Create and save Application entity
         Application application = new Application();
         application.setComprehensiveLead(comprehensiveLead);
-        application.setApplicationType(applicationRequestDTO.getApplicationType());
-        application.setBranchCode(applicationRequestDTO.getBranchCode());
-        application.setBranchName(applicationRequestDTO.getBranchName());
-        application.setApplicationDate(applicationRequestDTO.getApplicationDate());
-        application.setStatus(applicationRequestDTO.getStatus() != null ? applicationRequestDTO.getStatus() : "DRAFT");
-        application.setCreatedBy(applicationRequestDTO.getCreatedBy());
+        application.setApplicationType(applicationDTO.getApplicationType());
+        application.setBranchCode(applicationDTO.getBranchCode());
+        application.setBranchName(applicationDTO.getBranchName());
+        application.setApplicationDate(applicationDTO.getApplicationDate());
+        application.setStatus(applicationDTO.getStatus() != null ? applicationDTO.getStatus() : "DRAFT");
+        application.setCreatedBy(applicationDTO.getCreatedBy());
         application.setCreatedDate(LocalDate.now());
         
         // Save application first to get the ID
         application = applicationRepository.save(application);
         
         // Save applicant individuals with employment details and income expenditures
-        if (applicationRequestDTO.getApplicantIndividuals() != null && !applicationRequestDTO.getApplicantIndividuals().isEmpty()) {
+        if (applicationDTO.getApplicantIndividuals() != null && !applicationDTO.getApplicantIndividuals().isEmpty()) {
             List<ApplicantIndividual> applicantIndividuals = new ArrayList<>();
-            for (ApplicantIndividualRequestDTO individualRequestDTO : applicationRequestDTO.getApplicantIndividuals()) {
-                ApplicantIndividual applicantIndividual = convertToApplicantIndividualEntity(individualRequestDTO, application);
+            for (ApplicantIndividualDTO individualDTO : applicationDTO.getApplicantIndividuals()) {
+                ApplicantIndividual applicantIndividual = convertToApplicantIndividualEntity(individualDTO, application);
                 applicantIndividuals.add(applicantIndividual);
             }
             application.setApplicantIndividuals(applicantIndividuals);
         }
         
         // Save applicant companies with directors
-        if (applicationRequestDTO.getApplicantCompanies() != null && !applicationRequestDTO.getApplicantCompanies().isEmpty()) {
+        if (applicationDTO.getApplicantCompanies() != null && !applicationDTO.getApplicantCompanies().isEmpty()) {
             List<ApplicantCompany> applicantCompanies = new ArrayList<>();
-            for (ApplicantCompanyRequestDTO companyRequestDTO : applicationRequestDTO.getApplicantCompanies()) {
-                ApplicantCompany applicantCompany = convertToApplicantCompanyEntity(companyRequestDTO, application);
+            for (ApplicantCompanyDTO companyDTO : applicationDTO.getApplicantCompanies()) {
+                ApplicantCompany applicantCompany = convertToApplicantCompanyEntity(companyDTO, application);
                 applicantCompanies.add(applicantCompany);
             }
             application.setApplicantCompanies(applicantCompanies);
         }
         
         // Save facility requests
-        if (applicationRequestDTO.getFacilityRequests() != null && !applicationRequestDTO.getFacilityRequests().isEmpty()) {
+        if (applicationDTO.getFacilityRequests() != null && !applicationDTO.getFacilityRequests().isEmpty()) {
             List<FacilityRequest> facilityRequests = new ArrayList<>();
-            for (FacilityRequestRequestDTO facilityRequestDTO : applicationRequestDTO.getFacilityRequests()) {
+            for (FacilityRequestDTO facilityRequestDTO : applicationDTO.getFacilityRequests()) {
                 FacilityRequest facilityRequest = convertToFacilityRequestEntity(facilityRequestDTO, application);
                 facilityRequests.add(facilityRequest);
             }
@@ -112,50 +111,50 @@ public class ApplicationService {
         }
         
         // Save assets
-        if (applicationRequestDTO.getAssets() != null && !applicationRequestDTO.getAssets().isEmpty()) {
+        if (applicationDTO.getAssets() != null && !applicationDTO.getAssets().isEmpty()) {
             List<Asset> assets = new ArrayList<>();
-            for (AssetRequestDTO assetRequestDTO : applicationRequestDTO.getAssets()) {
-                Asset asset = convertToAssetEntity(assetRequestDTO, application);
+            for (AssetDTO assetDTO : applicationDTO.getAssets()) {
+                Asset asset = convertToAssetEntity(assetDTO, application);
                 assets.add(asset);
             }
             application.setAssets(assets);
         }
         
         // Save liabilities
-        if (applicationRequestDTO.getLiabilities() != null && !applicationRequestDTO.getLiabilities().isEmpty()) {
+        if (applicationDTO.getLiabilities() != null && !applicationDTO.getLiabilities().isEmpty()) {
             List<Liability> liabilities = new ArrayList<>();
-            for (LiabilityRequestDTO liabilityRequestDTO : applicationRequestDTO.getLiabilities()) {
-                Liability liability = convertToLiabilityEntity(liabilityRequestDTO, application);
+            for (LiabilityDTO liabilityDTO : applicationDTO.getLiabilities()) {
+                Liability liability = convertToLiabilityEntity(liabilityDTO, application);
                 liabilities.add(liability);
             }
             application.setLiabilities(liabilities);
         }
         
         // Save bank accounts
-        if (applicationRequestDTO.getBankAccounts() != null && !applicationRequestDTO.getBankAccounts().isEmpty()) {
+        if (applicationDTO.getBankAccounts() != null && !applicationDTO.getBankAccounts().isEmpty()) {
             List<BankAccount> bankAccounts = new ArrayList<>();
-            for (BankAccountRequestDTO bankAccountRequestDTO : applicationRequestDTO.getBankAccounts()) {
-                BankAccount bankAccount = convertToBankAccountEntity(bankAccountRequestDTO, application);
+            for (BankAccountDTO bankAccountDTO : applicationDTO.getBankAccounts()) {
+                BankAccount bankAccount = convertToBankAccountEntity(bankAccountDTO, application);
                 bankAccounts.add(bankAccount);
             }
             application.setBankAccounts(bankAccounts);
         }
         
         // Save income taxes
-        if (applicationRequestDTO.getIncomeTaxes() != null && !applicationRequestDTO.getIncomeTaxes().isEmpty()) {
+        if (applicationDTO.getIncomeTaxes() != null && !applicationDTO.getIncomeTaxes().isEmpty()) {
             List<IncomeTax> incomeTaxes = new ArrayList<>();
-            for (IncomeTaxRequestDTO incomeTaxRequestDTO : applicationRequestDTO.getIncomeTaxes()) {
-                IncomeTax incomeTax = convertToIncomeTaxEntity(incomeTaxRequestDTO, application);
+            for (IncomeTaxDTO incomeTaxDTO : applicationDTO.getIncomeTaxes()) {
+                IncomeTax incomeTax = convertToIncomeTaxEntity(incomeTaxDTO, application);
                 incomeTaxes.add(incomeTax);
             }
             application.setIncomeTaxes(incomeTaxes);
         }
         
         // Save insurance consents
-        if (applicationRequestDTO.getInsuranceConsents() != null && !applicationRequestDTO.getInsuranceConsents().isEmpty()) {
+        if (applicationDTO.getInsuranceConsents() != null && !applicationDTO.getInsuranceConsents().isEmpty()) {
             List<InsuranceConsent> insuranceConsents = new ArrayList<>();
-            for (InsuranceConsentRequestDTO insuranceConsentRequestDTO : applicationRequestDTO.getInsuranceConsents()) {
-                InsuranceConsent insuranceConsent = convertToInsuranceConsentEntity(insuranceConsentRequestDTO, application);
+            for (InsuranceConsentDTO insuranceConsentDTO : applicationDTO.getInsuranceConsents()) {
+                InsuranceConsent insuranceConsent = convertToInsuranceConsentEntity(insuranceConsentDTO, application);
                 insuranceConsents.add(insuranceConsent);
             }
             application.setInsuranceConsents(insuranceConsents);
@@ -168,8 +167,8 @@ public class ApplicationService {
         return convertToApplicationDTO(application);
     }
     
-    // Conversion methods from Request DTOs to Entities
-    private ApplicantIndividual convertToApplicantIndividualEntity(ApplicantIndividualRequestDTO dto, Application application) {
+    // Conversion methods from DTOs to Entities
+    private ApplicantIndividual convertToApplicantIndividualEntity(ApplicantIndividualDTO dto, Application application) {
         ApplicantIndividual entity = new ApplicantIndividual();
         entity.setApplication(application);
         entity.setFullName(dto.getFullName());
@@ -183,6 +182,8 @@ public class ApplicationService {
         // Convert Boolean to String
         if (dto.getIsPep() != null) {
             entity.setIsPep(dto.getIsPep() ? "Y" : "N");
+        } else if (dto.getIsPepString() != null) {
+            entity.setIsPep(dto.getIsPepString());
         }
         entity.setPepDetails(dto.getPepDetails());
         entity.setCivilStatus(dto.getCivilStatus());
@@ -195,7 +196,7 @@ public class ApplicationService {
         // Convert employment details
         if (dto.getEmploymentDetails() != null) {
             List<EmploymentDetails> employmentDetails = new ArrayList<>();
-            for (EmploymentDetailsRequestDTO empRequestDTO : dto.getEmploymentDetails()) {
+            for (EmploymentDetailsDTO empRequestDTO : dto.getEmploymentDetails()) {
                 EmploymentDetails empDetails = new EmploymentDetails();
                 empDetails.setApplicantIndividual(entity);
                 empDetails.setEmployerName(empRequestDTO.getEmployerName());
@@ -216,7 +217,7 @@ public class ApplicationService {
         // Convert income expenditures
         if (dto.getIncomeExpenditures() != null) {
             List<IncomeExpenditure> incomeExpenditures = new ArrayList<>();
-            for (IncomeExpenditureRequestDTO incomeExpRequestDTO : dto.getIncomeExpenditures()) {
+            for (IncomeExpenditureDTO incomeExpRequestDTO : dto.getIncomeExpenditures()) {
                 IncomeExpenditure incomeExp = new IncomeExpenditure();
                 incomeExp.setApplicantIndividual(entity);
                 incomeExp.setIncomeSource(incomeExpRequestDTO.getIncomeSource());
@@ -233,7 +234,7 @@ public class ApplicationService {
         return entity;
     }
     
-    private ApplicantCompany convertToApplicantCompanyEntity(ApplicantCompanyRequestDTO dto, Application application) {
+    private ApplicantCompany convertToApplicantCompanyEntity(ApplicantCompanyDTO dto, Application application) {
         ApplicantCompany entity = new ApplicantCompany();
         entity.setApplication(application);
         entity.setName(dto.getName());
@@ -251,7 +252,7 @@ public class ApplicationService {
         // Convert company directors
         if (dto.getCompanyDirectors() != null) {
             List<CompanyDirector> directors = new ArrayList<>();
-            for (CompanyDirectorRequestDTO directorRequestDTO : dto.getCompanyDirectors()) {
+            for (CompanyDirectorDTO directorRequestDTO : dto.getCompanyDirectors()) {
                 CompanyDirector director = new CompanyDirector();
                 director.setApplicantCompany(entity);
                 director.setName(directorRequestDTO.getName());
@@ -269,7 +270,7 @@ public class ApplicationService {
         return entity;
     }
     
-    private FacilityRequest convertToFacilityRequestEntity(FacilityRequestRequestDTO dto, Application application) {
+    private FacilityRequest convertToFacilityRequestEntity(FacilityRequestDTO dto, Application application) {
         FacilityRequest entity = new FacilityRequest();
         entity.setApplication(application);
         entity.setType(dto.getType());
@@ -285,7 +286,7 @@ public class ApplicationService {
         return entity;
     }
     
-    private Asset convertToAssetEntity(AssetRequestDTO dto, Application application) {
+    private Asset convertToAssetEntity(AssetDTO dto, Application application) {
         Asset entity = new Asset();
         entity.setApplication(application);
         entity.setAssetType(dto.getAssetType());
@@ -298,7 +299,7 @@ public class ApplicationService {
         return entity;
     }
     
-    private Liability convertToLiabilityEntity(LiabilityRequestDTO dto, Application application) {
+    private Liability convertToLiabilityEntity(LiabilityDTO dto, Application application) {
         Liability entity = new Liability();
         entity.setApplication(application);
         entity.setCreditorName(dto.getCreditorName());
@@ -313,7 +314,7 @@ public class ApplicationService {
         return entity;
     }
     
-    private BankAccount convertToBankAccountEntity(BankAccountRequestDTO dto, Application application) {
+    private BankAccount convertToBankAccountEntity(BankAccountDTO dto, Application application) {
         BankAccount entity = new BankAccount();
         entity.setApplication(application);
         entity.setBankName(dto.getBankName());
@@ -328,7 +329,7 @@ public class ApplicationService {
         return entity;
     }
     
-    private IncomeTax convertToIncomeTaxEntity(IncomeTaxRequestDTO dto, Application application) {
+    private IncomeTax convertToIncomeTaxEntity(IncomeTaxDTO dto, Application application) {
         IncomeTax entity = new IncomeTax();
         entity.setApplication(application);
         entity.setYearOfAssessment(dto.getYearOfAssessment());
@@ -341,15 +342,19 @@ public class ApplicationService {
         return entity;
     }
     
-    private InsuranceConsent convertToInsuranceConsentEntity(InsuranceConsentRequestDTO dto, Application application) {
+    private InsuranceConsent convertToInsuranceConsentEntity(InsuranceConsentDTO dto, Application application) {
         InsuranceConsent entity = new InsuranceConsent();
         entity.setApplication(application);
         // Convert Boolean to String
         if (dto.getConsent() != null) {
             entity.setConsent(dto.getConsent() ? "Y" : "N");
+        } else if (dto.getConsentString() != null) {
+            entity.setConsent(dto.getConsentString());
         }
         if (dto.getLoanInsuranceRequired() != null) {
             entity.setLoanInsuranceRequired(dto.getLoanInsuranceRequired() ? "Y" : "N");
+        } else if (dto.getLoanInsuranceRequiredString() != null) {
+            entity.setLoanInsuranceRequired(dto.getLoanInsuranceRequiredString());
         }
         entity.setInsuranceAmount(dto.getInsuranceAmount());
         entity.setInsuranceCompany(dto.getInsuranceCompany());
@@ -460,7 +465,11 @@ public class ApplicationService {
         dto.setResidenceType(individual.getResidenceType());
         dto.setYearsAtAddress(individual.getYearsAtAddress());
         dto.setNationality(individual.getNationality());
-        dto.setIsPep(individual.getIsPep());
+        // Convert String to Boolean for response
+        if (individual.getIsPep() != null) {
+            dto.setIsPepString(individual.getIsPep());
+            dto.setIsPep("Y".equals(individual.getIsPep()));
+        }
         dto.setPepDetails(individual.getPepDetails());
         dto.setCivilStatus(individual.getCivilStatus());
         dto.setDependentsCount(individual.getDependentsCount());
@@ -663,8 +672,15 @@ public class ApplicationService {
         InsuranceConsentDTO dto = new InsuranceConsentDTO();
         dto.setInsuranceId(insuranceConsent.getInsuranceId());
         dto.setApplicationId(insuranceConsent.getApplication() != null ? insuranceConsent.getApplication().getApplicationId() : null);
-        dto.setConsent(insuranceConsent.getConsent());
-        dto.setLoanInsuranceRequired(insuranceConsent.getLoanInsuranceRequired());
+        // Convert String to Boolean for response
+        if (insuranceConsent.getConsent() != null) {
+            dto.setConsentString(insuranceConsent.getConsent());
+            dto.setConsent("Y".equals(insuranceConsent.getConsent()));
+        }
+        if (insuranceConsent.getLoanInsuranceRequired() != null) {
+            dto.setLoanInsuranceRequiredString(insuranceConsent.getLoanInsuranceRequired());
+            dto.setLoanInsuranceRequired("Y".equals(insuranceConsent.getLoanInsuranceRequired()));
+        }
         dto.setInsuranceAmount(insuranceConsent.getInsuranceAmount());
         dto.setInsuranceCompany(insuranceConsent.getInsuranceCompany());
         dto.setCreatedDate(insuranceConsent.getCreatedDate());

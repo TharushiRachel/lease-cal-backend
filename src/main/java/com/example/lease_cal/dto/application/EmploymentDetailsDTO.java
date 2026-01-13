@@ -1,7 +1,17 @@
-package com.example.lease_cal.dto;
+package com.example.lease_cal.dto.application;
 
-public class EmploymentDetailsRequestDTO {
+import java.time.LocalDate;
+
+public class EmploymentDetailsDTO {
     
+    // Response fields
+    private Long employmentId;
+    private Long applicantId;
+    private LocalDate createdDate;
+    private LocalDate modifiedDate;
+    private String modifiedBy;
+    
+    // Request/Response fields
     private String employerName;
     private String employmentType;
     private String designation;
@@ -13,10 +23,26 @@ public class EmploymentDetailsRequestDTO {
     private String createdBy;
     
     // Constructors
-    public EmploymentDetailsRequestDTO() {
+    public EmploymentDetailsDTO() {
     }
     
     // Getters and Setters
+    public Long getEmploymentId() {
+        return employmentId;
+    }
+    
+    public void setEmploymentId(Long employmentId) {
+        this.employmentId = employmentId;
+    }
+    
+    public Long getApplicantId() {
+        return applicantId;
+    }
+    
+    public void setApplicantId(Long applicantId) {
+        this.applicantId = applicantId;
+    }
+    
     public String getEmployerName() {
         return employerName;
     }
@@ -81,11 +107,35 @@ public class EmploymentDetailsRequestDTO {
         this.avgIncomeGrowth = avgIncomeGrowth;
     }
     
+    public LocalDate getCreatedDate() {
+        return createdDate;
+    }
+    
+    public void setCreatedDate(LocalDate createdDate) {
+        this.createdDate = createdDate;
+    }
+    
     public String getCreatedBy() {
         return createdBy;
     }
     
     public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
+    }
+    
+    public LocalDate getModifiedDate() {
+        return modifiedDate;
+    }
+    
+    public void setModifiedDate(LocalDate modifiedDate) {
+        this.modifiedDate = modifiedDate;
+    }
+    
+    public String getModifiedBy() {
+        return modifiedBy;
+    }
+    
+    public void setModifiedBy(String modifiedBy) {
+        this.modifiedBy = modifiedBy;
     }
 }

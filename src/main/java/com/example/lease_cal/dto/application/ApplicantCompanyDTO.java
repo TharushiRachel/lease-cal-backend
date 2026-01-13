@@ -1,12 +1,20 @@
-package com.example.lease_cal.dto;
+package com.example.lease_cal.dto.application;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ApplicantCompanyRequestDTO {
+public class ApplicantCompanyDTO {
     
+    // Response fields
+    private Long companyId;
+    private Long applicationId;
+    private LocalDate createdDate;
+    private LocalDate modifiedDate;
+    private String modifiedBy;
+    
+    // Request/Response fields
     private String name;
     private String address;
     private String registrationNo;
@@ -17,14 +25,30 @@ public class ApplicantCompanyRequestDTO {
     private BigDecimal paidUpCapital;
     private BigDecimal issuedCapital;
     private String createdBy;
-    private List<CompanyDirectorRequestDTO> companyDirectors;
+    private List<CompanyDirectorDTO> companyDirectors;
     
     // Constructors
-    public ApplicantCompanyRequestDTO() {
+    public ApplicantCompanyDTO() {
         this.companyDirectors = new ArrayList<>();
     }
     
     // Getters and Setters
+    public Long getCompanyId() {
+        return companyId;
+    }
+    
+    public void setCompanyId(Long companyId) {
+        this.companyId = companyId;
+    }
+    
+    public Long getApplicationId() {
+        return applicationId;
+    }
+    
+    public void setApplicationId(Long applicationId) {
+        this.applicationId = applicationId;
+    }
+    
     public String getName() {
         return name;
     }
@@ -97,6 +121,14 @@ public class ApplicantCompanyRequestDTO {
         this.issuedCapital = issuedCapital;
     }
     
+    public LocalDate getCreatedDate() {
+        return createdDate;
+    }
+    
+    public void setCreatedDate(LocalDate createdDate) {
+        this.createdDate = createdDate;
+    }
+    
     public String getCreatedBy() {
         return createdBy;
     }
@@ -105,11 +137,27 @@ public class ApplicantCompanyRequestDTO {
         this.createdBy = createdBy;
     }
     
-    public List<CompanyDirectorRequestDTO> getCompanyDirectors() {
+    public LocalDate getModifiedDate() {
+        return modifiedDate;
+    }
+    
+    public void setModifiedDate(LocalDate modifiedDate) {
+        this.modifiedDate = modifiedDate;
+    }
+    
+    public String getModifiedBy() {
+        return modifiedBy;
+    }
+    
+    public void setModifiedBy(String modifiedBy) {
+        this.modifiedBy = modifiedBy;
+    }
+    
+    public List<CompanyDirectorDTO> getCompanyDirectors() {
         return companyDirectors;
     }
     
-    public void setCompanyDirectors(List<CompanyDirectorRequestDTO> companyDirectors) {
+    public void setCompanyDirectors(List<CompanyDirectorDTO> companyDirectors) {
         this.companyDirectors = companyDirectors;
     }
 }

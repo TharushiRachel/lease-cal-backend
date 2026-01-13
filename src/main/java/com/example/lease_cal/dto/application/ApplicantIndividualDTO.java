@@ -1,4 +1,4 @@
-package com.example.lease_cal.dto;
+package com.example.lease_cal.dto.application;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -6,26 +6,30 @@ import java.util.List;
 
 public class ApplicantIndividualDTO {
     
+    // Response fields
     private Long applicantId;
     private Long applicationId;
+    private LocalDate createdDate;
+    private LocalDate modifiedDate;
+    private String modifiedBy;
+    
+    // Request/Response fields
     private String fullName;
     private LocalDate dateOfBirth;
     private String nicPassportNo;
     private String permanentAddress;
     private String communicationAddress;
-    private String residenceType;
+    private String residenceType; // 'OWN','RENTED','OTHER'
     private Long yearsAtAddress;
     private String nationality;
-    private String isPep;
+    private Boolean isPep; // For request (will be converted to 'Y'/'N' in entity)
+    private String isPepString; // For response ('Y'/'N')
     private String pepDetails;
     private String civilStatus;
     private Long dependentsCount;
     private String highestQualification;
     private String professionalQualification;
-    private LocalDate createdDate;
     private String createdBy;
-    private LocalDate modifiedDate;
-    private String modifiedBy;
     private List<EmploymentDetailsDTO> employmentDetails;
     private List<IncomeExpenditureDTO> incomeExpenditures;
     
@@ -116,12 +120,20 @@ public class ApplicantIndividualDTO {
         this.nationality = nationality;
     }
     
-    public String getIsPep() {
+    public Boolean getIsPep() {
         return isPep;
     }
     
-    public void setIsPep(String isPep) {
+    public void setIsPep(Boolean isPep) {
         this.isPep = isPep;
+    }
+    
+    public String getIsPepString() {
+        return isPepString;
+    }
+    
+    public void setIsPepString(String isPepString) {
+        this.isPepString = isPepString;
     }
     
     public String getPepDetails() {

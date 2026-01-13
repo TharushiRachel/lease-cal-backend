@@ -1,9 +1,18 @@
-package com.example.lease_cal.dto;
+package com.example.lease_cal.dto.application;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
-public class AssetRequestDTO {
+public class AssetDTO {
     
+    // Response fields
+    private Long assetId;
+    private Long applicationId;
+    private LocalDate createdDate;
+    private LocalDate modifiedDate;
+    private String modifiedBy;
+    
+    // Request/Response fields
     private String assetType; // 'LAND_BUILDING','VEHICLE','SHARE_TBILL','INSURANCE','OTHER'
     private String description;
     private String ownerName;
@@ -12,10 +21,26 @@ public class AssetRequestDTO {
     private String createdBy;
     
     // Constructors
-    public AssetRequestDTO() {
+    public AssetDTO() {
     }
     
     // Getters and Setters
+    public Long getAssetId() {
+        return assetId;
+    }
+    
+    public void setAssetId(Long assetId) {
+        this.assetId = assetId;
+    }
+    
+    public Long getApplicationId() {
+        return applicationId;
+    }
+    
+    public void setApplicationId(Long applicationId) {
+        this.applicationId = applicationId;
+    }
+    
     public String getAssetType() {
         return assetType;
     }
@@ -56,11 +81,35 @@ public class AssetRequestDTO {
         this.mortgageDetails = mortgageDetails;
     }
     
+    public LocalDate getCreatedDate() {
+        return createdDate;
+    }
+    
+    public void setCreatedDate(LocalDate createdDate) {
+        this.createdDate = createdDate;
+    }
+    
     public String getCreatedBy() {
         return createdBy;
     }
     
     public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
+    }
+    
+    public LocalDate getModifiedDate() {
+        return modifiedDate;
+    }
+    
+    public void setModifiedDate(LocalDate modifiedDate) {
+        this.modifiedDate = modifiedDate;
+    }
+    
+    public String getModifiedBy() {
+        return modifiedBy;
+    }
+    
+    public void setModifiedBy(String modifiedBy) {
+        this.modifiedBy = modifiedBy;
     }
 }

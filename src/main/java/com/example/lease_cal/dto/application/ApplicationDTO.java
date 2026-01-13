@@ -1,4 +1,4 @@
-package com.example.lease_cal.dto;
+package com.example.lease_cal.dto.application;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -6,17 +6,20 @@ import java.util.List;
 
 public class ApplicationDTO {
     
+    // Response fields
     private Long applicationId;
+    private LocalDate createdDate;
+    private LocalDate modifiedDate;
+    private String modifiedBy;
+    
+    // Request/Response fields
     private Long compLeadId;
-    private String applicationType;
+    private String applicationType; // 'INDIVIDUAL' or 'COMPANY'
     private String branchCode;
     private String branchName;
     private LocalDate applicationDate;
-    private String status;
-    private LocalDate createdDate;
+    private String status; // 'DRAFT','SUBMITTED','APPROVED','REJECTED'
     private String createdBy;
-    private LocalDate modifiedDate;
-    private String modifiedBy;
     private List<ApplicantIndividualDTO> applicantIndividuals;
     private List<ApplicantCompanyDTO> applicantCompanies;
     private List<FacilityRequestDTO> facilityRequests;

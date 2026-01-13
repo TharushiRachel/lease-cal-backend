@@ -1,20 +1,23 @@
-package com.example.lease_cal.dto;
+package com.example.lease_cal.dto.application;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class IncomeExpenditureDTO {
     
+    // Response fields
     private Long recordId;
     private Long applicantId;
+    private LocalDate createdDate;
+    private LocalDate modifiedDate;
+    private String modifiedBy;
+    
+    // Request/Response fields
     private String incomeSource;
     private BigDecimal monthlyIncome;
     private String expenseType;
     private BigDecimal monthlyExpense;
-    private LocalDate createdDate;
     private String createdBy;
-    private LocalDate modifiedDate;
-    private String modifiedBy;
     
     // Constructors
     public IncomeExpenditureDTO() {
