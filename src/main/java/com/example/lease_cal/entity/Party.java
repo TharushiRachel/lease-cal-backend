@@ -40,6 +40,9 @@ public class Party {
     @Column(name = "preferred_branch", length = 100)
     private String preferredBranch;
     
+    @Column(name = "account_number")
+    private Long accountNumber;
+    
     @Column(name = "consider_crib", length = 5)
     private String considerCrib;
     
@@ -166,6 +169,14 @@ public class Party {
     
     public void setPreferredBranch(String preferredBranch) {
         this.preferredBranch = preferredBranch;
+    }
+    
+    public Long getAccountNumber() {
+        return accountNumber;
+    }
+    
+    public void setAccountNumber(Long accountNumber) {
+        this.accountNumber = accountNumber;
     }
     
     public String getConsiderCrib() {

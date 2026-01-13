@@ -1,0 +1,27 @@
+{
+  "creationType": "PERSONAL",
+  "partyType": "BORROWER",
+  "preferredBranch": "Colombo Branch",
+  "accountNumber": 123456789,
+  "civilStatus": "MARRIED",
+  "dateOfBirth": "1990-01-15",
+  "considerCrib": true,
+  "considerAA": true,
+  "compLeadId": null,
+  "personalName": "John Doe",
+  "email": "john@example.com",
+  "mobileNumber": "1234567890",
+  "createdBy": "admin",
+  "identifications": [
+    {
+      "identificationType": "NIC",
+      "identificationNumber": "123456789V",
+      "createdBy": "admin"
+    }
+  ],
+  "addresses": [
+    {
+      "address": "123 Main Street, Colombo"
+    }
+  ]
+}

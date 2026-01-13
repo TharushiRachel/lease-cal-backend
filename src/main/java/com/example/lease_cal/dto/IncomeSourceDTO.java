@@ -4,6 +4,7 @@ public class IncomeSourceDTO {
     
     private Long incomeSourceId;
     private Long compPartyId;
+    private String party;
     private String incomeType;
     private String considerForRepayment;
     
@@ -26,6 +27,14 @@ public class IncomeSourceDTO {
     
     public void setCompPartyId(Long compPartyId) {
         this.compPartyId = compPartyId;
+    }
+    
+    public String getParty() {
+        return party;
+    }
+    
+    public void setParty(String party) {
+        this.party = party;
     }
     
     public String getIncomeType() {

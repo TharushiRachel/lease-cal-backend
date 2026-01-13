@@ -64,6 +64,34 @@ public class ComprehensiveLeadService {
     }
     
     /**
+     * Save a party for a comprehensive lead
+     * 
+     * @param compLeadId The ID of the comprehensive lead
+     * @param partyRequestDTO The party request DTO containing party data
+     * @return PartyDTO with saved data including ID
+     */
+    public PartyDTO savePartyForLead(Long compLeadId, PartyRequestDTO partyRequestDTO) {
+        // Find the comprehensive lead
+        ComprehensiveLead comprehensiveLead = comprehensiveLeadRepository.findById(compLeadId)
+                .orElseThrow(() -> new RuntimeException("Comprehensive Lead not found with id: " + compLeadId));
+        
+        // Convert and save party with identifications and addresses
+        Party party = convertToPartyEntity(partyRequestDTO, comprehensiveLead);
+        
+        // Set creationType on the lead if provided in party
+        if (partyRequestDTO.getCreationType() != null && comprehensiveLead.getCreationType() == null) {
+            comprehensiveLead.setCreationType(partyRequestDTO.getCreationType());
+            comprehensiveLeadRepository.save(comprehensiveLead);
+        }
+        
+        // Save party (cascade will save identifications and addresses)
+        party = partyRepository.save(party);
+        
+        // Convert to DTO and return
+        return convertToPartyDTO(party);
+    }
+    
+    /**
      * Save income sources for a party
      * 
      * @param partyId The ID of the party
@@ -80,6 +108,7 @@ public class ComprehensiveLeadService {
         for (IncomeSourceRequestDTO incomeRequestDTO : incomeSourceRequestDTOs) {
             IncomeSource incomeSource = new IncomeSource();
             incomeSource.setParty(party);
+            incomeSource.setPartyName(incomeRequestDTO.getParty());
             incomeSource.setIncomeType(incomeRequestDTO.getIncomeType());
             incomeSource.setConsiderForRepayment(incomeRequestDTO.getConsiderForRepayment());
             incomeSources.add(incomeSource);
@@ -130,8 +159,8 @@ public class ComprehensiveLeadService {
         RelatedParty relatedParty = new RelatedParty();
         relatedParty.setLead(comprehensiveLead);
         relatedParty.setRelationshipDescription(relatedPartyRequestDTO.getRelationshipDescription());
-        // Note: isRelationShip and sharePresentage are not yet in the entity/database
-        // They are accepted in the DTO but won't be persisted until added to the schema
+        relatedParty.setIsRelationShip(relatedPartyRequestDTO.getIsRelationShip());
+        relatedParty.setSharePresentage(relatedPartyRequestDTO.getSharePresentage());
         relatedParty.setConsiderCrib(relatedPartyRequestDTO.getConsiderCrib());
         relatedParty.setConsiderAdvanceAnalysis(relatedPartyRequestDTO.getConsiderAdvanceAnalysis());
         
@@ -164,6 +193,7 @@ public class ComprehensiveLeadService {
         party.setDateOfBirth(partyRequestDTO.getDateOfBirth());
         party.setCivilStatus(partyRequestDTO.getCivilStatus());
         party.setPreferredBranch(partyRequestDTO.getPreferredBranch());
+        party.setAccountNumber(partyRequestDTO.getAccountNumber());
         // Convert Boolean to String for considerCrib and considerAA
         if (partyRequestDTO.getConsiderCrib() != null) {
             party.setConsiderCrib(partyRequestDTO.getConsiderCrib() ? "Y" : "N");
@@ -259,6 +289,7 @@ public class ComprehensiveLeadService {
         partyDTO.setDateOfBirth(party.getDateOfBirth());
         partyDTO.setCivilStatus(party.getCivilStatus());
         partyDTO.setPreferredBranch(party.getPreferredBranch());
+        partyDTO.setAccountNumber(party.getAccountNumber());
         partyDTO.setConsiderCrib(party.getConsiderCrib());
         partyDTO.setConsiderAdvanceAnalysis(party.getConsiderAdvanceAnalysis());
         partyDTO.setCreatedDate(party.getCreatedDate());
@@ -330,6 +361,7 @@ public class ComprehensiveLeadService {
         IncomeSourceDTO dto = new IncomeSourceDTO();
         dto.setIncomeSourceId(incomeSource.getIncomeSourceId());
         dto.setCompPartyId(incomeSource.getParty() != null ? incomeSource.getParty().getCompPartyId() : null);
+        dto.setParty(incomeSource.getPartyName());
         dto.setIncomeType(incomeSource.getIncomeType());
         dto.setConsiderForRepayment(incomeSource.getConsiderForRepayment());
         return dto;
@@ -341,12 +373,12 @@ public class ComprehensiveLeadService {
     private RelatedPartyDTO convertToRelatedPartyDTO(RelatedParty relatedParty) {
         RelatedPartyDTO dto = new RelatedPartyDTO();
         dto.setRelatedPartyId(relatedParty.getRelatedPartyId());
-        // Note: isRelationShip and sharePresentage are not yet in the entity
-        // They will be null in the response until added to the entity/database
+        dto.setIsRelationShip(relatedParty.getIsRelationShip());
         dto.setCompLeadId(relatedParty.getLead() != null ? relatedParty.getLead().getCompLeadId() : null);
         dto.setMainPartnerId(relatedParty.getMainParty() != null ? relatedParty.getMainParty().getCompPartyId() : null);
         dto.setRelatedPartnerId(relatedParty.getRelatedParty() != null ? relatedParty.getRelatedParty().getCompPartyId() : null);
         dto.setRelationshipDescription(relatedParty.getRelationshipDescription());
+        dto.setSharePresentage(relatedParty.getSharePresentage());
         dto.setConsiderCrib(relatedParty.getConsiderCrib());
         dto.setConsiderAdvanceAnalysis(relatedParty.getConsiderAdvanceAnalysis());
         return dto;

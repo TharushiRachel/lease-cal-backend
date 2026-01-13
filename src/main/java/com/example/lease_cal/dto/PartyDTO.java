@@ -15,6 +15,7 @@ public class PartyDTO {
     private LocalDate dateOfBirth;
     private String civilStatus;
     private String preferredBranch;
+    private Long accountNumber;
     private String considerCrib;
     private String considerAdvanceAnalysis;
     private LocalDate createdDate;
@@ -103,6 +104,14 @@ public class PartyDTO {
     
     public void setPreferredBranch(String preferredBranch) {
         this.preferredBranch = preferredBranch;
+    }
+    
+    public Long getAccountNumber() {
+        return accountNumber;
+    }
+    
+    public void setAccountNumber(Long accountNumber) {
+        this.accountNumber = accountNumber;
     }
     
     public String getConsiderCrib() {

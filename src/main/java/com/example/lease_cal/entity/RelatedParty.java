@@ -27,6 +27,12 @@ public class RelatedParty {
     @Column(name = "relationship_description", length = 500)
     private String relationshipDescription;
     
+    @Column(name = "is_relationship")
+    private Boolean isRelationShip;
+    
+    @Column(name = "share_presentage")
+    private Double sharePresentage;
+    
     @Column(name = "consider_crib", length = 5)
     private String considerCrib;
     
@@ -82,6 +88,22 @@ public class RelatedParty {
     
     public void setRelationshipDescription(String relationshipDescription) {
         this.relationshipDescription = relationshipDescription;
+    }
+    
+    public Boolean getIsRelationShip() {
+        return isRelationShip;
+    }
+    
+    public void setIsRelationShip(Boolean isRelationShip) {
+        this.isRelationShip = isRelationShip;
+    }
+    
+    public Double getSharePresentage() {
+        return sharePresentage;
+    }
+    
+    public void setSharePresentage(Double sharePresentage) {
+        this.sharePresentage = sharePresentage;
     }
     
     public String getConsiderCrib() {

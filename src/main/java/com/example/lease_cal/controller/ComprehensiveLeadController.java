@@ -41,6 +41,29 @@ public class ComprehensiveLeadController {
     }
     
     /**
+     * Save a party for a comprehensive lead
+     * 
+     * @param leadId The ID of the comprehensive lead
+     * @param partyRequestDTO The party request DTO containing party data
+     * @return ResponseEntity with PartyDTO and HTTP status
+     */
+    @PostMapping("/{leadId}/parties")
+    public ResponseEntity<?> savePartyForLead(
+            @PathVariable Long leadId,
+            @RequestBody PartyRequestDTO partyRequestDTO) {
+        try {
+            PartyDTO savedParty = comprehensiveLeadService.savePartyForLead(leadId, partyRequestDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedParty);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ErrorResponse("Error saving party", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrorResponse("Unexpected error", e.getMessage()));
+        }
+    }
+    
+    /**
      * Save income sources for a party
      * 
      * @param partyId The ID of the party

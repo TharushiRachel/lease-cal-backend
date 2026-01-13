@@ -16,6 +16,9 @@ public class IncomeSource {
     @JoinColumn(name = "comp_party_id")
     private Party party;
     
+    @Column(name = "party", length = 255)
+    private String partyName;
+    
     @Column(name = "income_type", nullable = false, length = 50)
     private String incomeType;
     
@@ -46,6 +49,14 @@ public class IncomeSource {
     
     public void setParty(Party party) {
         this.party = party;
+    }
+    
+    public String getPartyName() {
+        return partyName;
+    }
+    
+    public void setPartyName(String partyName) {
+        this.partyName = partyName;
     }
     
     public String getIncomeType() {
