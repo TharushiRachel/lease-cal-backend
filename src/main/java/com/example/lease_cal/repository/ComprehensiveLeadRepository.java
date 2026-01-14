@@ -12,6 +12,12 @@ import java.util.Optional;
 public interface ComprehensiveLeadRepository extends JpaRepository<ComprehensiveLead, Long> {
     
     /**
+     * Find comprehensive lead by compLeadId (using Spring Data JPA method name query)
+     * This is equivalent to findById but uses the actual field name
+     */
+    Optional<ComprehensiveLead> findByCompLeadId(Long compLeadId);
+    
+    /**
      * Find comprehensive lead by ID with all child entities loaded
      * Uses JOIN FETCH to eagerly load parties, related parties, and their nested entities
      * JPQL uses entity class names (ComprehensiveLead, Party, etc.) which JPA maps to table names
