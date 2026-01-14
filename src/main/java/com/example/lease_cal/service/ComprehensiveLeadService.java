@@ -386,9 +386,13 @@ public class ComprehensiveLeadService {
     
     /**
      * Get comprehensive lead by ID with all child entities
+     * 
+     * @param leadId The ID of the comprehensive lead to retrieve
+     * @return ComprehensiveLeadDTO with all nested entities (parties, identifications, addresses, income sources, related parties)
+     * @throws RuntimeException if comprehensive lead is not found
      */
     public ComprehensiveLeadDTO getComprehensiveLeadById(Long leadId) {
-        ComprehensiveLead comprehensiveLead = comprehensiveLeadRepository.findById(leadId)
+        ComprehensiveLead comprehensiveLead = comprehensiveLeadRepository.findByIdWithAllRelations(leadId)
                 .orElseThrow(() -> new RuntimeException("Comprehensive Lead not found with id: " + leadId));
         return convertToComprehensiveLeadDTO(comprehensiveLead);
     }
