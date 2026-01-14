@@ -215,6 +215,53 @@ public class ComprehensiveLeadController {
     }
     
     /**
+     * Save a facility for a comprehensive lead
+     * 
+     * @param leadId The ID of the comprehensive lead
+     * @param facilityDTO The facility DTO containing facility data
+     * @return ResponseEntity with ComprehensiveFacilityDTO and HTTP status
+     */
+    @PostMapping("/{leadId}/facilities")
+    public ResponseEntity<?> saveFacility(
+            @PathVariable Long leadId,
+            @RequestBody ComprehensiveFacilityDTO facilityDTO) {
+        try {
+            ComprehensiveFacilityDTO savedFacility = comprehensiveLeadService.saveFacility(leadId, facilityDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedFacility);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ErrorResponse("Error saving facility", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrorResponse("Unexpected error", e.getMessage()));
+        }
+    }
+    
+    /**
+     * Update a facility by deleting existing record and recreating it
+     * Uses the same saveFacility method after deleting existing record for the specific facility ID
+     * 
+     * @param facilityId The ID of the facility to update
+     * @param facilityDTO The facility DTO containing updated facility data
+     * @return ResponseEntity with ComprehensiveFacilityDTO and HTTP status
+     */
+    @PutMapping("/facilities/{facilityId}")
+    public ResponseEntity<?> updateFacility(
+            @PathVariable Long facilityId,
+            @RequestBody ComprehensiveFacilityDTO facilityDTO) {
+        try {
+            ComprehensiveFacilityDTO updatedFacility = comprehensiveLeadService.updateFacility(facilityId, facilityDTO);
+            return ResponseEntity.ok(updatedFacility);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ErrorResponse("Error updating facility", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrorResponse("Unexpected error", e.getMessage()));
+        }
+    }
+    
+    /**
      * Error response class for API error messages
      */
     public static class ErrorResponse {

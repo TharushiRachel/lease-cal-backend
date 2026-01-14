@@ -40,6 +40,13 @@ CREATE SEQUENCE seq_income_source_id
     NOCACHE
     NOCYCLE;
 
+-- Sequences for t_comp_facilities table
+CREATE SEQUENCE seq_comp_facility_id
+    START WITH 1
+    INCREMENT BY 1
+    NOCACHE
+    NOCYCLE;
+
 -- Grant permissions (if needed)
 -- GRANT SELECT ON seq_comp_lead_id TO your_user;
 -- GRANT SELECT ON seq_comp_party_id TO your_user;
@@ -47,4 +54,5 @@ CREATE SEQUENCE seq_income_source_id
 -- GRANT SELECT ON seq_party_address_id TO your_user;
 -- GRANT SELECT ON seq_related_party_id TO your_user;
 -- GRANT SELECT ON seq_income_source_id TO your_user;
+-- GRANT SELECT ON seq_comp_facility_id TO your_user;
 

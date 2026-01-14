@@ -28,6 +28,9 @@ public class ComprehensiveLeadService {
     @Autowired
     private RelatedPartyRepository relatedPartyRepository;
     
+    @Autowired
+    private ComprehensiveFacilityRepository comprehensiveFacilityRepository;
+    
     /**
      * Save a lead with parties, identifications, and addresses only
      * Income sources and related parties should be saved separately
@@ -506,5 +509,95 @@ public class ComprehensiveLeadService {
         comprehensiveLead = comprehensiveLeadRepository.findByIdWithAllRelations(leadId)
                 .orElseThrow(() -> new RuntimeException("Comprehensive Lead not found with id: " + leadId));
         return convertToComprehensiveLeadDTO(comprehensiveLead);
+    }
+    
+    /**
+     * Save a facility for a comprehensive lead
+     * 
+     * @param leadId The ID of the comprehensive lead
+     * @param facilityDTO The facility DTO containing facility data
+     * @return ComprehensiveFacilityDTO with saved data including ID
+     * @throws RuntimeException if comprehensive lead is not found
+     */
+    public ComprehensiveFacilityDTO saveFacility(Long leadId, ComprehensiveFacilityDTO facilityDTO) {
+        // Find the comprehensive lead
+        ComprehensiveLead comprehensiveLead = comprehensiveLeadRepository.findById(leadId)
+                .orElseThrow(() -> new RuntimeException("Comprehensive Lead not found with id: " + leadId));
+        
+        // Convert and save facility
+        ComprehensiveFacility facility = convertToFacilityEntity(facilityDTO, comprehensiveLead);
+        facility = comprehensiveFacilityRepository.save(facility);
+        
+        // Convert to DTO and return
+        return convertToFacilityDTO(facility);
+    }
+    
+    /**
+     * Update a facility by deleting existing record and recreating it
+     * Uses the same saveFacility method after deleting existing record for the specific facility ID
+     * 
+     * @param facilityId The ID of the facility to update
+     * @param facilityDTO The facility DTO containing updated facility data
+     * @return ComprehensiveFacilityDTO with updated data including ID
+     * @throws RuntimeException if facility is not found
+     */
+    public ComprehensiveFacilityDTO updateFacility(Long facilityId, ComprehensiveFacilityDTO facilityDTO) {
+        // Find the existing facility
+        ComprehensiveFacility existingFacility = comprehensiveFacilityRepository.findById(facilityId)
+                .orElseThrow(() -> new RuntimeException("Facility not found with id: " + facilityId));
+        
+        // Get the lead ID from existing facility
+        Long leadId = existingFacility.getLead().getCompLeadId();
+        
+        // Delete the existing facility
+        comprehensiveFacilityRepository.delete(existingFacility);
+        
+        // Use existing save method to recreate facility
+        return saveFacility(leadId, facilityDTO);
+    }
+    
+    /**
+     * Convert ComprehensiveFacilityDTO to ComprehensiveFacility entity
+     */
+    private ComprehensiveFacility convertToFacilityEntity(ComprehensiveFacilityDTO facilityDTO, ComprehensiveLead comprehensiveLead) {
+        ComprehensiveFacility facility = new ComprehensiveFacility();
+        facility.setLead(comprehensiveLead);
+        facility.setFacilityDescription(facilityDTO.getFacilityDescription());
+        facility.setRequestedTenure(facilityDTO.getRequestedTenure());
+        facility.setLeaseRental(facilityDTO.getLeaseRental());
+        facility.setProcessingFee(facilityDTO.getProcessingFee());
+        facility.setValidityOfOffer(facilityDTO.getValidityOfOffer());
+        facility.setLeaseAmount(facilityDTO.getLeaseAmount());
+        facility.setRepaymentMode(facilityDTO.getRepaymentMode());
+        facility.setUpfront(facilityDTO.getUpfront());
+        facility.setInsurance(facilityDTO.getInsurance());
+        facility.setCreatedBy(facilityDTO.getCreatedBy());
+        facility.setCreatedDate(LocalDate.now());
+        
+        return facility;
+    }
+    
+    /**
+     * Convert ComprehensiveFacility entity to ComprehensiveFacilityDTO
+     */
+    private ComprehensiveFacilityDTO convertToFacilityDTO(ComprehensiveFacility facility) {
+        ComprehensiveFacilityDTO dto = new ComprehensiveFacilityDTO();
+        dto.setCompFacilityId(facility.getCompFacilityId());
+        dto.setCompLeadId(facility.getLead() != null ? facility.getLead().getCompLeadId() : null);
+        dto.setFacilityDescription(facility.getFacilityDescription());
+        dto.setRequestedTenure(facility.getRequestedTenure());
+        dto.setLeaseRental(facility.getLeaseRental());
+        dto.setProcessingFee(facility.getProcessingFee());
+        dto.setValidityOfOffer(facility.getValidityOfOffer());
+        dto.setLeaseAmount(facility.getLeaseAmount());
+        dto.setRepaymentMode(facility.getRepaymentMode());
+        dto.setUpfront(facility.getUpfront());
+        dto.setInsurance(facility.getInsurance());
+        dto.setCreatedDate(facility.getCreatedDate());
+        dto.setCreatedBy(facility.getCreatedBy());
+        dto.setModifiedDate(facility.getModifiedDate());
+        dto.setModifiedBy(facility.getModifiedBy());
+        
+        return dto;
     }
 }

@@ -41,6 +41,12 @@ CREATE SEQUENCE seq_income_source_id
     NOCACHE
     NOCYCLE;
 
+CREATE SEQUENCE seq_comp_facility_id
+    START WITH 1
+    INCREMENT BY 1
+    NOCACHE
+    NOCYCLE;
+
 -- ============================================
 -- CREATE TABLES
 -- ============================================
@@ -114,6 +120,25 @@ CREATE TABLE t_comp_income_sources (
     CONSTRAINT fk_income_party FOREIGN KEY (comp_party_id) REFERENCES t_comp_parties(comp_party_id)
 );
 
+CREATE TABLE t_comp_facilities (
+    comp_facility_id NUMBER PRIMARY KEY,
+    comp_lead_id NUMBER NOT NULL,
+    facility_description VARCHAR2(1000),
+    requested_tenure NUMBER,
+    lease_rental NUMBER(18,2),
+    processing_fee NUMBER(18,2),
+    validity_of_offer DATE,
+    lease_amount NUMBER(18,2),
+    repayment_mode VARCHAR2(50),
+    upfront NUMBER(18,2),
+    insurance NUMBER(18,2),
+    CREATED_DATE DATE,
+    CREATED_BY VARCHAR2(100),
+    MODIFIED_DATE DATE,
+    MODIFIED_BY VARCHAR2(100),
+    CONSTRAINT fk_facilities_lead FOREIGN KEY (comp_lead_id) REFERENCES t_comp_lead(comp_lead_id)
+);
+
 -- ============================================
 -- CREATE TRIGGERS FOR AUTO-INCREMENT
 -- ============================================
@@ -178,6 +203,16 @@ BEGIN
 END;
 /
 
+CREATE OR REPLACE TRIGGER trg_comp_facility_id
+    BEFORE INSERT ON t_comp_facilities
+    FOR EACH ROW
+BEGIN
+    IF :NEW.comp_facility_id IS NULL THEN
+        :NEW.comp_facility_id := seq_comp_facility_id.NEXTVAL;
+    END IF;
+END;
+/
+
 -- ============================================
 -- CREATE INDEXES (Optional but recommended)
 -- ============================================
@@ -187,4 +222,5 @@ CREATE INDEX idx_identifications_party_id ON t_comp_party_identifications(comp_p
 CREATE INDEX idx_addresses_party_id ON t_comp_party_addresses(comp_party_id);
 CREATE INDEX idx_related_lead_id ON t_comp_related_parties(comp_lead_id);
 CREATE INDEX idx_income_party_id ON t_comp_income_sources(comp_party_id);
+CREATE INDEX idx_facilities_lead_id ON t_comp_facilities(comp_lead_id);
 
