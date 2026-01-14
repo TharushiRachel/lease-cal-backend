@@ -124,6 +124,30 @@ public class ComprehensiveLeadService {
     }
     
     /**
+     * Update income sources for a party by deleting existing records and recreating them
+     * Uses the same saveIncomeSources method after deleting existing records for the specific party ID
+     * 
+     * @param partyId The ID of the party
+     * @param incomeSourceRequestDTOs List of income source request DTOs
+     * @return List of saved IncomeSourceDTOs
+     * @throws RuntimeException if party is not found
+     */
+    public List<IncomeSourceDTO> updateIncomeSources(Long partyId, List<IncomeSourceRequestDTO> incomeSourceRequestDTOs) {
+        // Verify the party exists
+        Party party = partyRepository.findById(partyId)
+                .orElseThrow(() -> new RuntimeException("Party not found with id: " + partyId));
+        
+        // Find and delete all existing income sources for this party
+        List<IncomeSource> existingIncomeSources = incomeSourceRepository.findByPartyId(partyId);
+        if (existingIncomeSources != null && !existingIncomeSources.isEmpty()) {
+            incomeSourceRepository.deleteAll(existingIncomeSources);
+        }
+        
+        // Use existing save method to recreate income sources
+        return saveIncomeSources(partyId, incomeSourceRequestDTOs);
+    }
+    
+    /**
      * Save related parties for a lead
      * 
      * @param leadId The ID of the lead
@@ -149,6 +173,30 @@ public class ComprehensiveLeadService {
         return relatedParties.stream()
                 .map(this::convertToRelatedPartyDTO)
                 .collect(Collectors.toList());
+    }
+    
+    /**
+     * Update related parties for a lead by deleting existing records and recreating them
+     * Uses the same saveRelatedParties method after deleting existing records for the specific lead ID
+     * 
+     * @param leadId The ID of the lead
+     * @param relatedPartyRequestDTOs List of related party request DTOs
+     * @return List of saved RelatedPartyDTOs
+     * @throws RuntimeException if comprehensive lead is not found
+     */
+    public List<RelatedPartyDTO> updateRelatedParties(Long leadId, List<RelatedPartyRequestDTO> relatedPartyRequestDTOs) {
+        // Verify the comprehensive lead exists
+        ComprehensiveLead comprehensiveLead = comprehensiveLeadRepository.findById(leadId)
+                .orElseThrow(() -> new RuntimeException("Comprehensive Lead not found with id: " + leadId));
+        
+        // Find and delete all existing related parties for this lead
+        List<RelatedParty> existingRelatedParties = relatedPartyRepository.findByLeadId(leadId);
+        if (existingRelatedParties != null && !existingRelatedParties.isEmpty()) {
+            relatedPartyRepository.deleteAll(existingRelatedParties);
+        }
+        
+        // Use existing save method to recreate related parties
+        return saveRelatedParties(leadId, relatedPartyRequestDTOs);
     }
     
     /**
@@ -393,6 +441,69 @@ public class ComprehensiveLeadService {
      */
     public ComprehensiveLeadDTO getComprehensiveLeadById(Long leadId) {
         ComprehensiveLead comprehensiveLead = comprehensiveLeadRepository.findByIdWithAllRelations(leadId)
+                .orElseThrow(() -> new RuntimeException("Comprehensive Lead not found with id: " + leadId));
+        return convertToComprehensiveLeadDTO(comprehensiveLead);
+    }
+    
+    /**
+     * Update a comprehensive lead by deleting existing child records and recreating them
+     * Uses the same child methods (savePartyForLead, saveIncomeSources, saveRelatedParties) 
+     * after deleting existing records for the specific ID
+     * 
+     * @param leadId The ID of the comprehensive lead to update
+     * @param comprehensiveLeadRequestDTO The comprehensive lead request DTO containing updated lead and party data
+     * @return ComprehensiveLeadDTO with updated data including IDs
+     * @throws RuntimeException if comprehensive lead is not found
+     */
+    public ComprehensiveLeadDTO updateLeadWithChildren(Long leadId, ComprehensiveLeadRequestDTO comprehensiveLeadRequestDTO) {
+        // Find the existing comprehensive lead with all relations
+        ComprehensiveLead comprehensiveLead = comprehensiveLeadRepository.findByIdWithAllRelations(leadId)
+                .orElseThrow(() -> new RuntimeException("Comprehensive Lead not found with id: " + leadId));
+        
+        // Delete all existing related parties first (they reference parties, so delete before parties)
+        if (comprehensiveLead.getRelatedParties() != null && !comprehensiveLead.getRelatedParties().isEmpty()) {
+            relatedPartyRepository.deleteAll(comprehensiveLead.getRelatedParties());
+            comprehensiveLead.getRelatedParties().clear();
+        }
+        
+        // Delete all existing parties (cascade will delete identifications, addresses, and income sources)
+        if (comprehensiveLead.getParties() != null && !comprehensiveLead.getParties().isEmpty()) {
+            partyRepository.deleteAll(comprehensiveLead.getParties());
+            comprehensiveLead.getParties().clear();
+        }
+        
+        // Update the lead's basic fields
+        if (comprehensiveLeadRequestDTO.getLeadName() != null) {
+            comprehensiveLead.setLeadName(comprehensiveLeadRequestDTO.getLeadName());
+        }
+        if (comprehensiveLeadRequestDTO.getCreatedBy() != null) {
+            comprehensiveLead.setModifiedBy(comprehensiveLeadRequestDTO.getCreatedBy());
+        }
+        comprehensiveLead.setModifiedDate(LocalDate.now());
+        
+        // Save the updated lead
+        comprehensiveLead = comprehensiveLeadRepository.save(comprehensiveLead);
+        
+        // Recreate parties using existing method
+        if (comprehensiveLeadRequestDTO.getParties() != null && !comprehensiveLeadRequestDTO.getParties().isEmpty()) {
+            for (PartyRequestDTO partyRequestDTO : comprehensiveLeadRequestDTO.getParties()) {
+                // Save party with identifications and addresses
+                PartyDTO savedParty = savePartyForLead(leadId, partyRequestDTO);
+                
+                // Save income sources for this party if provided
+                if (partyRequestDTO.getIncomeSources() != null && !partyRequestDTO.getIncomeSources().isEmpty()) {
+                    saveIncomeSources(savedParty.getCompPartyId(), partyRequestDTO.getIncomeSources());
+                }
+            }
+        }
+        
+        // Recreate related parties using existing method
+        if (comprehensiveLeadRequestDTO.getRelatedParties() != null && !comprehensiveLeadRequestDTO.getRelatedParties().isEmpty()) {
+            saveRelatedParties(leadId, comprehensiveLeadRequestDTO.getRelatedParties());
+        }
+        
+        // Fetch the updated lead with all relations and return
+        comprehensiveLead = comprehensiveLeadRepository.findByIdWithAllRelations(leadId)
                 .orElseThrow(() -> new RuntimeException("Comprehensive Lead not found with id: " + leadId));
         return convertToComprehensiveLeadDTO(comprehensiveLead);
     }

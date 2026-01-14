@@ -90,6 +90,33 @@ public class ComprehensiveLeadController {
     }
     
     /**
+     * Update income sources for a party by deleting existing records and recreating them
+     * Uses the same saveIncomeSources method after deleting existing records for the specific party ID
+     * 
+     * @param partyId The ID of the party
+     * @param incomeSourceRequestDTOs List of income source request DTOs
+     * @return ResponseEntity with list of IncomeSourceDTO and HTTP status
+     */
+    @PutMapping("/parties/{partyId}/income-sources")
+    public ResponseEntity<?> updateIncomeSources(
+            @PathVariable Long partyId,
+            @RequestBody List<IncomeSourceRequestDTO> incomeSourceRequestDTOs) {
+        try {
+            List<IncomeSourceDTO> updatedIncomeSources = comprehensiveLeadService.updateIncomeSources(
+                    partyId, 
+                    incomeSourceRequestDTOs
+            );
+            return ResponseEntity.ok(updatedIncomeSources);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ErrorResponse("Error updating income sources", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrorResponse("Unexpected error", e.getMessage()));
+        }
+    }
+    
+    /**
      * Save related parties for a comprehensive lead
      * 
      * @param leadId The ID of the comprehensive lead
@@ -116,6 +143,33 @@ public class ComprehensiveLeadController {
     }
     
     /**
+     * Update related parties for a comprehensive lead by deleting existing records and recreating them
+     * Uses the same saveRelatedParties method after deleting existing records for the specific lead ID
+     * 
+     * @param leadId The ID of the comprehensive lead
+     * @param relatedPartyRequestDTOs List of related party request DTOs
+     * @return ResponseEntity with list of RelatedPartyDTO and HTTP status
+     */
+    @PutMapping("/{leadId}/related-parties")
+    public ResponseEntity<?> updateRelatedParties(
+            @PathVariable Long leadId,
+            @RequestBody List<RelatedPartyRequestDTO> relatedPartyRequestDTOs) {
+        try {
+            List<RelatedPartyDTO> updatedRelatedParties = comprehensiveLeadService.updateRelatedParties(
+                    leadId, 
+                    relatedPartyRequestDTOs
+            );
+            return ResponseEntity.ok(updatedRelatedParties);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ErrorResponse("Error updating related parties", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrorResponse("Unexpected error", e.getMessage()));
+        }
+    }
+    
+    /**
      * Get a comprehensive lead by ID with all child entities
      * 
      * @param leadId The ID of the comprehensive lead to retrieve
@@ -132,6 +186,31 @@ public class ComprehensiveLeadController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new ErrorResponse("Error retrieving comprehensive lead", e.getMessage()));
+        }
+    }
+    
+    /**
+     * Update a comprehensive lead by deleting existing child records and recreating them
+     * Uses the same child methods (savePartyForLead, saveIncomeSources, saveRelatedParties) 
+     * after deleting existing records for the specific ID
+     * 
+     * @param leadId The ID of the comprehensive lead to update
+     * @param comprehensiveLeadRequestDTO The comprehensive lead request DTO containing updated lead and party data
+     * @return ResponseEntity with ComprehensiveLeadDTO and HTTP status
+     */
+    @PutMapping("/{leadId}")
+    public ResponseEntity<?> updateLeadWithChildren(
+            @PathVariable Long leadId,
+            @RequestBody ComprehensiveLeadRequestDTO comprehensiveLeadRequestDTO) {
+        try {
+            ComprehensiveLeadDTO updatedLead = comprehensiveLeadService.updateLeadWithChildren(leadId, comprehensiveLeadRequestDTO);
+            return ResponseEntity.ok(updatedLead);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ErrorResponse("Error updating comprehensive lead", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrorResponse("Unexpected error", e.getMessage()));
         }
     }
     
