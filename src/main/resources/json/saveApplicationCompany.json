@@ -1,0 +1,107 @@
+{
+  "compLeadId": 1,
+  "applicationType": "COMPANY",
+  "branchCode": "BR002",
+  "branchName": "Kandy Branch",
+  "applicationDate": "2024-01-20",
+  "status": "SUBMITTED",
+  "createdBy": "admin",
+  "applicantCompanies": [
+    {
+      "name": "ABC Trading Company (Pvt) Ltd",
+      "address": "456 Business Park, Kandy",
+      "registrationNo": "PV-67890",
+      "incorporationDate": "2018-07-15",
+      "businessType": "Import/Export",
+      "constitution": "PRIVATE LTD",
+      "noOfEmployees": 100,
+      "paidUpCapital": 10000000.00,
+      "issuedCapital": 20000000.00,
+      "createdBy": "admin",
+      "companyDirectors": [
+        {
+          "name": "Michael Brown",
+          "address": "789 Executive Road, Kandy",
+          "nicNo": "751234567V",
+          "age": 50,
+          "shareholdingPercent": 70.00,
+          "createdBy": "admin"
+        },
+        {
+          "name": "Sarah Williams",
+          "address": "321 Manager Street, Kandy",
+          "nicNo": "801234567V",
+          "age": 38,
+          "shareholdingPercent": 30.00,
+          "createdBy": "admin"
+        }
+      ]
+    }
+  ],
+  "facilityRequests": [
+    {
+      "type": "WORKING_CAPITAL",
+      "purpose": "Business expansion",
+      "amount": 10000000.00,
+      "repaymentYears": 3,
+      "repaymentType": "MONTHLY",
+      "deductionDate": "04",
+      "applicantContribution": 2000000.00,
+      "advancePayment": 1000000.00,
+      "createdBy": "admin"
+    }
+  ],
+  "assets": [
+    {
+      "assetType": "LAND_BUILDING",
+      "description": "Warehouse and office building",
+      "ownerName": "ABC Trading Company (Pvt) Ltd",
+      "marketValue": 50000000.00,
+      "mortgageDetails": "Partially mortgaged",
+      "createdBy": "admin"
+    }
+  ],
+  "liabilities": [
+    {
+      "creditorName": "XYZ Bank",
+      "referenceNo": "LOAN-002",
+      "purpose": "Equipment financing",
+      "amountBorrowed": 15000000.00,
+      "balancePayable": 8000000.00,
+      "repaymentPeriodMonths": 60,
+      "security": "Equipment mortgage",
+      "createdBy": "admin"
+    }
+  ],
+  "bankAccounts": [
+    {
+      "bankName": "Sampath Bank",
+      "branchName": "Kandy Main",
+      "accountNo": "1122334455",
+      "accountType": "CURRENT",
+      "dateOpened": "2018-08-01",
+      "balance": 2000000.00,
+      "holderName": "ABC Trading Company (Pvt) Ltd",
+      "createdBy": "admin"
+    }
+  ],
+  "incomeTaxes": [
+    {
+      "yearOfAssessment": 2023,
+      "assessableIncome": 50000000.00,
+      "taxableIncome": 45000000.00,
+      "taxPaid": 9000000.00,
+      "remarks": "Corporate tax paid",
+      "createdBy": "admin"
+    }
+  ],
+  "insuranceConsents": [
+    {
+      "consent": true,
+      "loanInsuranceRequired": false,
+      "insuranceAmount": null,
+      "insuranceCompany": null,
+      "createdBy": "admin"
+    }
+  ]
+}

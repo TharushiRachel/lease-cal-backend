@@ -1,0 +1,181 @@
+{
+  "compLeadId": 1,
+  "applicationType": "INDIVIDUAL",
+  "branchCode": "BR001",
+  "branchName": "Colombo Main Branch",
+  "applicationDate": "2024-01-15",
+  "status": "DRAFT",
+  "createdBy": "admin",
+  "applicantIndividuals": [
+    {
+      "fullName": "John Doe",
+      "dateOfBirth": "1990-05-20",
+      "nicPassportNo": "901234567V",
+      "permanentAddress": "123 Main Street, Colombo 05",
+      "communicationAddress": "123 Main Street, Colombo 05",
+      "residenceType": "OWN",
+      "yearsAtAddress": 5,
+      "nationality": "Sri Lankan",
+      "isPep": false,
+      "pepDetails": null,
+      "civilStatus": "MARRIED",
+      "dependentsCount": 2,
+      "highestQualification": "Bachelor's Degree",
+      "professionalQualification": "Chartered Accountant",
+      "createdBy": "admin",
+      "employmentDetails": [
+        {
+          "employerName": "ABC Corporation",
+          "employmentType": "PERMANENT",
+          "designation": "Senior Manager",
+          "yearsWithEmployer": 8,
+          "businessNature": "Financial Services",
+          "employerAddress": "456 Business Avenue, Colombo 03",
+          "officePhone": "0112345678",
+          "avgIncomeGrowth": ">10%",
+          "createdBy": "admin"
+        }
+      ],
+      "incomeExpenditures": [
+        {
+          "incomeSource": "SALARY",
+          "monthlyIncome": 150000.00,
+          "expenseType": "HOUSING",
+          "monthlyExpense": 50000.00,
+          "createdBy": "admin"
+        },
+        {
+          "incomeSource": "RENTAL",
+          "monthlyIncome": 30000.00,
+          "expenseType": "UTILITIES",
+          "monthlyExpense": 15000.00,
+          "createdBy": "admin"
+        }
+      ]
+    }
+  ],
+  "applicantCompanies": [
+    {
+      "name": "XYZ Private Limited",
+      "address": "789 Corporate Road, Colombo 07",
+      "registrationNo": "PV-12345",
+      "incorporationDate": "2015-03-10",
+      "businessType": "Trading",
+      "constitution": "PRIVATE LTD",
+      "noOfEmployees": 50,
+      "paidUpCapital": 5000000.00,
+      "issuedCapital": 10000000.00,
+      "createdBy": "admin",
+      "companyDirectors": [
+        {
+          "name": "Jane Smith",
+          "address": "321 Director Lane, Colombo 08",
+          "nicNo": "851234567V",
+          "age": 45,
+          "shareholdingPercent": 60.00,
+          "createdBy": "admin"
+        },
+        {
+          "name": "Robert Johnson",
+          "address": "654 Partner Street, Colombo 09",
+          "nicNo": "801234567V",
+          "age": 42,
+          "shareholdingPercent": 40.00,
+          "createdBy": "admin"
+        }
+      ]
+    }
+  ],
+  "facilityRequests": [
+    {
+      "type": "LEASE_FINANCING",
+      "purpose": "Vehicle Purchase",
+      "amount": 5000000.00,
+      "repaymentYears": 5,
+      "repaymentType": "MONTHLY",
+      "deductionDate": "26",
+      "applicantContribution": 1000000.00,
+      "advancePayment": 500000.00,
+      "createdBy": "admin"
+    }
+  ],
+  "assets": [
+    {
+      "assetType": "LAND_BUILDING",
+      "description": "Residential property in Colombo",
+      "ownerName": "John Doe",
+      "marketValue": 15000000.00,
+      "mortgageDetails": "Mortgaged to ABC Bank",
+      "createdBy": "admin"
+    },
+    {
+      "assetType": "VEHICLE",
+      "description": "Toyota Corolla 2020",
+      "ownerName": "John Doe",
+      "marketValue": 3500000.00,
+      "mortgageDetails": null,
+      "createdBy": "admin"
+    }
+  ],
+  "liabilities": [
+    {
+      "creditorName": "ABC Bank",
+      "referenceNo": "LOAN-001",
+      "purpose": "Home Loan",
+      "amountBorrowed": 8000000.00,
+      "balancePayable": 5000000.00,
+      "repaymentPeriodMonths": 120,
+      "security": "Property mortgage",
+      "createdBy": "admin"
+    }
+  ],
+  "bankAccounts": [
+    {
+      "bankName": "Commercial Bank",
+      "branchName": "Colombo Main",
+      "accountNo": "1234567890",
+      "accountType": "SAVINGS",
+      "dateOpened": "2010-01-15",
+      "balance": 500000.00,
+      "holderName": "John Doe",
+      "createdBy": "admin"
+    },
+    {
+      "bankName": "People's Bank",
+      "branchName": "Colombo Central",
+      "accountNo": "9876543210",
+      "accountType": "CURRENT",
+      "dateOpened": "2015-06-20",
+      "balance": 250000.00,
+      "holderName": "John Doe",
+      "createdBy": "admin"
+    }
+  ],
+  "incomeTaxes": [
+    {
+      "yearOfAssessment": 2023,
+      "assessableIncome": 1800000.00,
+      "taxableIncome": 1500000.00,
+      "taxPaid": 300000.00,
+      "remarks": "Tax clearance certificate attached",
+      "createdBy": "admin"
+    },
+    {
+      "yearOfAssessment": 2022,
+      "assessableIncome": 1600000.00,
+      "taxableIncome": 1400000.00,
+      "taxPaid": 280000.00,
+      "remarks": null,
+      "createdBy": "admin"
+    }
+  ],
+  "insuranceConsents": [
+    {
+      "consent": true,
+      "loanInsuranceRequired": true,
+      "insuranceAmount": 5000000.00,
+      "insuranceCompany": "Ceylinco Insurance",
+      "createdBy": "admin"
+    }
+  ]
+}

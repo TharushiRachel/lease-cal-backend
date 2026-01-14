@@ -1,0 +1,40 @@
+{
+  "compLeadId": 1,
+  "applicationType": "INDIVIDUAL",
+  "branchCode": "BR001",
+  "branchName": "Colombo Main Branch",
+  "applicationDate": "2024-01-15",
+  "status": "DRAFT",
+  "createdBy": "admin",
+  "applicantIndividuals": [
+    {
+      "fullName": "John Doe",
+      "dateOfBirth": "1990-05-20",
+      "nicPassportNo": "901234567V",
+      "permanentAddress": "123 Main Street, Colombo 05",
+      "communicationAddress": "123 Main Street, Colombo 05",
+      "residenceType": "OWN",
+      "yearsAtAddress": 5,
+      "nationality": "Sri Lankan",
+      "isPep": false,
+      "civilStatus": "MARRIED",
+      "dependentsCount": 2,
+      "highestQualification": "Bachelor's Degree",
+      "professionalQualification": "Chartered Accountant",
+      "createdBy": "admin"
+    }
+  ],
+  "facilityRequests": [
+    {
+      "type": "LEASE_FINANCING",
+      "purpose": "Vehicle Purchase",
+      "amount": 5000000.00,
+      "repaymentYears": 5,
+      "repaymentType": "MONTHLY",
+      "deductionDate": "26",
+      "applicantContribution": 1000000.00,
+      "advancePayment": 500000.00,
+      "createdBy": "admin"
+    }
+  ]
+}
