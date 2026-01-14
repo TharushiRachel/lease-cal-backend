@@ -14,6 +14,7 @@ public interface ComprehensiveLeadRepository extends JpaRepository<Comprehensive
     /**
      * Find comprehensive lead by ID with all child entities loaded
      * Uses JOIN FETCH to eagerly load parties, related parties, and their nested entities
+     * JPQL uses entity class names (ComprehensiveLead, Party, etc.) which JPA maps to table names
      */
     @Query("SELECT DISTINCT cl FROM ComprehensiveLead cl " +
            "LEFT JOIN FETCH cl.parties p " +
