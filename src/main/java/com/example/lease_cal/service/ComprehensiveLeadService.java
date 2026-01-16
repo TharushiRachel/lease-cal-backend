@@ -512,48 +512,54 @@ public class ComprehensiveLeadService {
     }
     
     /**
-     * Save a facility for a comprehensive lead
+     * Save or update a facility based on compFacilityId in the request body
+     * If compFacilityId is 0 or null, it creates a new facility using compLeadId
+     * If compFacilityId is provided, it updates the existing facility
      * 
-     * @param leadId The ID of the comprehensive lead
      * @param facilityDTO The facility DTO containing facility data
      * @return ComprehensiveFacilityDTO with saved data including ID
-     * @throws RuntimeException if comprehensive lead is not found
+     * @throws RuntimeException if required entities are not found
      */
-    public ComprehensiveFacilityDTO saveFacility(Long leadId, ComprehensiveFacilityDTO facilityDTO) {
-        // Find the comprehensive lead
+    public ComprehensiveFacilityDTO saveOrUpdateFacility(ComprehensiveFacilityDTO facilityDTO) {
+        Long facilityId = facilityDTO.getCompFacilityId();
+        
+        if (facilityId != null && facilityId > 0) {
+            // Update existing facility
+            ComprehensiveFacility existingFacility = comprehensiveFacilityRepository.findById(facilityId)
+                    .orElseThrow(() -> new RuntimeException("Facility not found with id: " + facilityId));
+            
+            existingFacility.setFacilityDescription(facilityDTO.getFacilityDescription());
+            existingFacility.setRequestedTenure(facilityDTO.getRequestedTenure());
+            existingFacility.setLeaseRental(facilityDTO.getLeaseRental());
+            existingFacility.setProcessingFee(facilityDTO.getProcessingFee());
+            existingFacility.setValidityOfOffer(facilityDTO.getValidityOfOffer());
+            existingFacility.setLeaseAmount(facilityDTO.getLeaseAmount());
+            existingFacility.setRepaymentMode(facilityDTO.getRepaymentMode());
+            existingFacility.setUpfront(facilityDTO.getUpfront());
+            existingFacility.setInsurance(facilityDTO.getInsurance());
+            existingFacility.setModifiedDate(LocalDate.now());
+            if (facilityDTO.getModifiedBy() != null) {
+                existingFacility.setModifiedBy(facilityDTO.getModifiedBy());
+            } else if (facilityDTO.getCreatedBy() != null) {
+                existingFacility.setModifiedBy(facilityDTO.getCreatedBy());
+            }
+            
+            ComprehensiveFacility savedFacility = comprehensiveFacilityRepository.save(existingFacility);
+            return convertToFacilityDTO(savedFacility);
+        }
+        
+        // Create new facility
+        Long leadId = facilityDTO.getCompLeadId();
+        if (leadId == null || leadId <= 0) {
+            throw new RuntimeException("Comprehensive Lead ID is required to create a facility");
+        }
+        
         ComprehensiveLead comprehensiveLead = comprehensiveLeadRepository.findById(leadId)
                 .orElseThrow(() -> new RuntimeException("Comprehensive Lead not found with id: " + leadId));
         
-        // Convert and save facility
         ComprehensiveFacility facility = convertToFacilityEntity(facilityDTO, comprehensiveLead);
         facility = comprehensiveFacilityRepository.save(facility);
-        
-        // Convert to DTO and return
         return convertToFacilityDTO(facility);
-    }
-    
-    /**
-     * Update a facility by deleting existing record and recreating it
-     * Uses the same saveFacility method after deleting existing record for the specific facility ID
-     * 
-     * @param facilityId The ID of the facility to update
-     * @param facilityDTO The facility DTO containing updated facility data
-     * @return ComprehensiveFacilityDTO with updated data including ID
-     * @throws RuntimeException if facility is not found
-     */
-    public ComprehensiveFacilityDTO updateFacility(Long facilityId, ComprehensiveFacilityDTO facilityDTO) {
-        // Find the existing facility
-        ComprehensiveFacility existingFacility = comprehensiveFacilityRepository.findById(facilityId)
-                .orElseThrow(() -> new RuntimeException("Facility not found with id: " + facilityId));
-        
-        // Get the lead ID from existing facility
-        Long leadId = existingFacility.getLead().getCompLeadId();
-        
-        // Delete the existing facility
-        comprehensiveFacilityRepository.delete(existingFacility);
-        
-        // Use existing save method to recreate facility
-        return saveFacility(leadId, facilityDTO);
     }
     
     /**

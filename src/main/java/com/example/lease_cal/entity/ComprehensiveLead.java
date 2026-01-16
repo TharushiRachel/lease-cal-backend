@@ -39,6 +39,9 @@ public class ComprehensiveLead {
     @OneToMany(mappedBy = "lead", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RelatedParty> relatedParties = new ArrayList<>();
     
+    @OneToMany(mappedBy = "lead", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ComprehensiveFacility> facilities = new ArrayList<>();
+    
     @PrePersist
     protected void onCreate() {
         if (createdDate == null) {
@@ -130,5 +133,13 @@ public class ComprehensiveLead {
     
     public void setRelatedParties(List<RelatedParty> relatedParties) {
         this.relatedParties = relatedParties;
+    }
+    
+    public List<ComprehensiveFacility> getFacilities() {
+        return facilities;
+    }
+    
+    public void setFacilities(List<ComprehensiveFacility> facilities) {
+        this.facilities = facilities;
     }
 }

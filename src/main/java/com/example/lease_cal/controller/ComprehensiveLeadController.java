@@ -215,46 +215,24 @@ public class ComprehensiveLeadController {
     }
     
     /**
-     * Save a facility for a comprehensive lead
+     * Save or update a facility using compFacilityId in the request body
+     * If compFacilityId is 0 or null, it creates a new facility using compLeadId
+     * If compFacilityId is provided, it updates the existing facility
      * 
-     * @param leadId The ID of the comprehensive lead
      * @param facilityDTO The facility DTO containing facility data
      * @return ResponseEntity with ComprehensiveFacilityDTO and HTTP status
      */
-    @PostMapping("/{leadId}/facilities")
-    public ResponseEntity<?> saveFacility(
-            @PathVariable Long leadId,
-            @RequestBody ComprehensiveFacilityDTO facilityDTO) {
+    @PostMapping("/facilities")
+    public ResponseEntity<?> saveOrUpdateFacility(@RequestBody ComprehensiveFacilityDTO facilityDTO) {
         try {
-            ComprehensiveFacilityDTO savedFacility = comprehensiveLeadService.saveFacility(leadId, facilityDTO);
-            return ResponseEntity.status(HttpStatus.CREATED).body(savedFacility);
+            ComprehensiveFacilityDTO savedFacility = comprehensiveLeadService.saveOrUpdateFacility(facilityDTO);
+            HttpStatus status = (facilityDTO.getCompFacilityId() != null && facilityDTO.getCompFacilityId() > 0)
+                    ? HttpStatus.OK
+                    : HttpStatus.CREATED;
+            return ResponseEntity.status(status).body(savedFacility);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ErrorResponse("Error saving facility", e.getMessage()));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ErrorResponse("Unexpected error", e.getMessage()));
-        }
-    }
-    
-    /**
-     * Update a facility by deleting existing record and recreating it
-     * Uses the same saveFacility method after deleting existing record for the specific facility ID
-     * 
-     * @param facilityId The ID of the facility to update
-     * @param facilityDTO The facility DTO containing updated facility data
-     * @return ResponseEntity with ComprehensiveFacilityDTO and HTTP status
-     */
-    @PutMapping("/facilities/{facilityId}")
-    public ResponseEntity<?> updateFacility(
-            @PathVariable Long facilityId,
-            @RequestBody ComprehensiveFacilityDTO facilityDTO) {
-        try {
-            ComprehensiveFacilityDTO updatedFacility = comprehensiveLeadService.updateFacility(facilityId, facilityDTO);
-            return ResponseEntity.ok(updatedFacility);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new ErrorResponse("Error updating facility", e.getMessage()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new ErrorResponse("Unexpected error", e.getMessage()));
