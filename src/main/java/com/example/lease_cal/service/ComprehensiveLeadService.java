@@ -90,6 +90,10 @@ public class ComprehensiveLeadService {
      * @return PartyDTO with saved data including ID
      */
     public PartyDTO savePartyForLead(Long compLeadId, PartyRequestDTO partyRequestDTO) {
+        if (partyRequestDTO.getCompPartyId() != null && partyRequestDTO.getCompPartyId() > 0) {
+            return updatePartyForLead(compLeadId, partyRequestDTO.getCompPartyId(), partyRequestDTO);
+        }
+
         // Find the comprehensive lead
         ComprehensiveLead comprehensiveLead = comprehensiveLeadRepository.findById(compLeadId)
                 .orElseThrow(() -> new RuntimeException("Comprehensive Lead not found with id: " + compLeadId));

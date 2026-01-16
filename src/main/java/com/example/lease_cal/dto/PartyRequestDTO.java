@@ -6,6 +6,7 @@ import java.util.List;
 
 public class PartyRequestDTO {
     
+    private Long compPartyId;
     private Long compLeadId;
     private String creationType;
     private String partyType;
@@ -37,6 +38,14 @@ public class PartyRequestDTO {
     
     public void setCompLeadId(Long compLeadId) {
         this.compLeadId = compLeadId;
+    }
+
+    public Long getCompPartyId() {
+        return compPartyId;
+    }
+
+    public void setCompPartyId(Long compPartyId) {
+        this.compPartyId = compPartyId;
     }
     
     public String getPartyType() {

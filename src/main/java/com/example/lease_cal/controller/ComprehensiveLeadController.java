@@ -60,7 +60,10 @@ public class ComprehensiveLeadController {
             @RequestBody PartyRequestDTO partyRequestDTO) {
         try {
             PartyDTO savedParty = comprehensiveLeadService.savePartyForLead(leadId, partyRequestDTO);
-            return ResponseEntity.status(HttpStatus.CREATED).body(savedParty);
+            HttpStatus status = (partyRequestDTO.getCompPartyId() != null && partyRequestDTO.getCompPartyId() > 0)
+                    ? HttpStatus.OK
+                    : HttpStatus.CREATED;
+            return ResponseEntity.status(status).body(savedParty);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ErrorResponse("Error saving party", e.getMessage()));
