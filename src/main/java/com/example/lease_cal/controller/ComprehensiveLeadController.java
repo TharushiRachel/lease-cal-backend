@@ -16,6 +16,9 @@ public class ComprehensiveLeadController {
     
     @Autowired
     private ComprehensiveLeadService comprehensiveLeadService;
+
+
+    
     
     /**
      * Create a new comprehensive lead with parties, identifications, and addresses only
@@ -61,6 +64,31 @@ public class ComprehensiveLeadController {
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ErrorResponse("Error saving party", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrorResponse("Unexpected error", e.getMessage()));
+        }
+    }
+    
+    /**
+     * Update a party for a comprehensive lead
+     * 
+     * @param leadId The ID of the comprehensive lead
+     * @param partyId The ID of the party to update
+     * @param partyRequestDTO The party request DTO containing updated party data
+     * @return ResponseEntity with PartyDTO and HTTP status
+     */
+    @PutMapping("/{leadId}/parties/{partyId}")
+    public ResponseEntity<?> updatePartyForLead(
+            @PathVariable Long leadId,
+            @PathVariable Long partyId,
+            @RequestBody PartyRequestDTO partyRequestDTO) {
+        try {
+            PartyDTO updatedParty = comprehensiveLeadService.updatePartyForLead(leadId, partyId, partyRequestDTO);
+            return ResponseEntity.ok(updatedParty);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ErrorResponse("Error updating party", e.getMessage()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new ErrorResponse("Unexpected error", e.getMessage()));

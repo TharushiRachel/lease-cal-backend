@@ -111,6 +111,83 @@ public class ComprehensiveLeadService {
     }
     
     /**
+     * Update a party for a comprehensive lead
+     * 
+     * @param compLeadId The ID of the comprehensive lead
+     * @param partyId The ID of the party to update
+     * @param partyRequestDTO The party request DTO containing updated party data
+     * @return PartyDTO with updated data
+     */
+    public PartyDTO updatePartyForLead(Long compLeadId, Long partyId, PartyRequestDTO partyRequestDTO) {
+        // Find the comprehensive lead
+        ComprehensiveLead comprehensiveLead = comprehensiveLeadRepository.findById(compLeadId)
+                .orElseThrow(() -> new RuntimeException("Comprehensive Lead not found with id: " + compLeadId));
+        
+        // Find the existing party
+        Party existingParty = partyRepository.findById(partyId)
+                .orElseThrow(() -> new RuntimeException("Party not found with id: " + partyId));
+        
+        if (existingParty.getLead() == null || !existingParty.getLead().getCompLeadId().equals(compLeadId)) {
+            throw new RuntimeException("Party does not belong to lead id: " + compLeadId);
+        }
+        
+        existingParty.setPartyType(partyRequestDTO.getPartyType());
+        existingParty.setPersonalName(partyRequestDTO.getPersonalName());
+        existingParty.setEmail(partyRequestDTO.getEmail());
+        existingParty.setMobileNumber(partyRequestDTO.getMobileNumber());
+        existingParty.setDateOfBirth(partyRequestDTO.getDateOfBirth());
+        existingParty.setCivilStatus(partyRequestDTO.getCivilStatus());
+        existingParty.setPreferredBranch(partyRequestDTO.getPreferredBranch());
+        existingParty.setAccountNumber(partyRequestDTO.getAccountNumber());
+        if (partyRequestDTO.getConsiderCrib() != null) {
+            existingParty.setConsiderCrib(partyRequestDTO.getConsiderCrib() ? "Y" : "N");
+        } else {
+            existingParty.setConsiderCrib(null);
+        }
+        if (partyRequestDTO.getConsiderAA() != null) {
+            existingParty.setConsiderAdvanceAnalysis(partyRequestDTO.getConsiderAA() ? "Y" : "N");
+        } else {
+            existingParty.setConsiderAdvanceAnalysis(null);
+        }
+        existingParty.setModifiedBy(partyRequestDTO.getCreatedBy());
+        existingParty.setModifiedDate(LocalDate.now());
+        
+        // Set creationType on the lead if provided in party
+        if (partyRequestDTO.getCreationType() != null && comprehensiveLead.getCreationType() == null) {
+            comprehensiveLead.setCreationType(partyRequestDTO.getCreationType());
+            comprehensiveLeadRepository.save(comprehensiveLead);
+        }
+        
+        // Replace identifications
+        existingParty.getIdentifications().clear();
+        if (partyRequestDTO.getIdentifications() != null) {
+            for (PartyIdentificationRequestDTO idRequestDTO : partyRequestDTO.getIdentifications()) {
+                PartyIdentification identification = new PartyIdentification();
+                identification.setParty(existingParty);
+                identification.setIdentificationType(idRequestDTO.getIdentificationType());
+                identification.setIdentificationNumber(idRequestDTO.getIdentificationNumber());
+                identification.setCreatedBy(idRequestDTO.getCreatedBy());
+                identification.setCreatedDate(LocalDate.now());
+                existingParty.getIdentifications().add(identification);
+            }
+        }
+        
+        // Replace addresses
+        existingParty.getAddresses().clear();
+        if (partyRequestDTO.getAddresses() != null) {
+            for (PartyAddressRequestDTO addressRequestDTO : partyRequestDTO.getAddresses()) {
+                PartyAddress address = new PartyAddress();
+                address.setParty(existingParty);
+                address.setAddress(addressRequestDTO.getAddress());
+                existingParty.getAddresses().add(address);
+            }
+        }
+        
+        Party savedParty = partyRepository.save(existingParty);
+        return convertToPartyDTO(savedParty);
+    }
+    
+    /**
      * Save income sources for a party
      * 
      * @param partyId The ID of the party
