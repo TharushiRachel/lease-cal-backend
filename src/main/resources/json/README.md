@@ -13,7 +13,35 @@ Example payload for creating a comprehensive lead with parties, identifications,
 
 ---
 
-### 2. saveIncomeSources.json
+### 2. saveFacility.json / updateFacility.json
+**Endpoint:** `POST /api/comprehensive-leads/facilities`
+
+Example payloads for saving or updating a facility using the unified endpoint.
+
+**Request Body:**
+- `compFacilityId` (Long, required) - Use `0` for create, existing ID for update
+- `compLeadId` (Long, required for create) - Lead ID when creating
+- `facilityDescription` (String, optional)
+- `requestedTenure` (Integer, optional)
+- `leaseRental` (BigDecimal, optional)
+- `processingFee` (BigDecimal, optional)
+- `validityOfOffer` (Date, optional) - "YYYY-MM-DD"
+- `leaseAmount` (BigDecimal, optional)
+- `repaymentMode` (String, optional)
+- `upfront` (BigDecimal, optional)
+- `insurance` (BigDecimal, optional)
+- `createdBy` (String, optional)
+- `modifiedBy` (String, optional)
+
+**Example Usage:**
+```http
+POST /api/comprehensive-leads/facilities
+Content-Type: application/json
+```
+
+---
+
+### 3. saveIncomeSources.json
 **Endpoint:** `POST /api/comprehensive-leads/{compLeadId}/income-sources`
 
 Example payload for saving income sources for a comprehensive lead.
@@ -36,7 +64,7 @@ Content-Type: application/json
 
 ---
 
-### 3. saveRelatedParties.json
+### 4. saveRelatedParties.json
 **Endpoint:** `POST /api/comprehensive-leads/{compLeadId}/related-parties`
 
 Example payload for saving related parties for a comprehensive lead.
@@ -64,7 +92,7 @@ Content-Type: application/json
 
 ## Application Management API
 
-### 4. saveApplication.json
+### 5. saveApplication.json
 **Endpoint:** `POST /api/applications`
 
 Complete example payload for creating an application with all child entities (INDIVIDUAL type).
@@ -94,7 +122,7 @@ Content-Type: application/json
 
 ---
 
-### 5. saveApplicationMinimal.json
+### 6. saveApplicationMinimal.json
 **Endpoint:** `POST /api/applications`
 
 Minimal example payload for creating an application with only required fields and basic information.
@@ -103,7 +131,7 @@ Minimal example payload for creating an application with only required fields an
 
 ---
 
-### 6. saveApplicationCompany.json
+### 7. saveApplicationCompany.json
 **Endpoint:** `POST /api/applications`
 
 Complete example payload for creating a COMPANY type application with all child entities.

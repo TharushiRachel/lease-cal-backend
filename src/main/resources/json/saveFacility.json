@@ -1,0 +1,14 @@
+{
+  "compFacilityId": 0,
+  "compLeadId": 123,
+  "facilityDescription": "Vehicle lease",
+  "requestedTenure": 36,
+  "leaseRental": 25000.00,
+  "processingFee": 5000.00,
+  "validityOfOffer": "2026-02-15",
+  "leaseAmount": 900000.00,
+  "repaymentMode": "MONTHLY",
+  "upfront": 100000.00,
+  "insurance": 15000.00,
+  "createdBy": "admin"
+}
