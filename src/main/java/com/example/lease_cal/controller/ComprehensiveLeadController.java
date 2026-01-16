@@ -26,8 +26,12 @@ public class ComprehensiveLeadController {
     @PostMapping
     public ResponseEntity<?> saveLeadWithChildren(@RequestBody ComprehensiveLeadRequestDTO comprehensiveLeadRequestDTO) {
         try {
-            ComprehensiveLeadDTO savedLead = comprehensiveLeadService.saveLeadWithChildren(comprehensiveLeadRequestDTO);
-            return ResponseEntity.status(HttpStatus.CREATED).body(savedLead);
+            ComprehensiveLeadDTO savedLead = comprehensiveLeadService.saveOrUpdateLeadWithChildren(comprehensiveLeadRequestDTO);
+            HttpStatus status = (comprehensiveLeadRequestDTO.getCompLeadId() != null
+                    && comprehensiveLeadRequestDTO.getCompLeadId() > 0)
+                    ? HttpStatus.OK
+                    : HttpStatus.CREATED;
+            return ResponseEntity.status(status).body(savedLead);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new ErrorResponse("Validation Error", e.getMessage()));
@@ -75,11 +79,33 @@ public class ComprehensiveLeadController {
             @PathVariable Long partyId,
             @RequestBody List<IncomeSourceRequestDTO> incomeSourceRequestDTOs) {
         try {
-            List<IncomeSourceDTO> savedIncomeSources = comprehensiveLeadService.saveIncomeSources(
-                    partyId, 
-                    incomeSourceRequestDTOs
-            );
+            IncomeSourceListRequestDTO requestDTO = new IncomeSourceListRequestDTO();
+            requestDTO.setPartyId(partyId);
+            requestDTO.setIncomeSources(incomeSourceRequestDTOs);
+            List<IncomeSourceDTO> savedIncomeSources = comprehensiveLeadService.saveOrUpdateIncomeSources(requestDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body(savedIncomeSources);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ErrorResponse("Error saving income sources", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrorResponse("Unexpected error", e.getMessage()));
+        }
+    }
+    
+    /**
+     * Save or update income sources using partyId in the request body
+     * 
+     * @param incomeSourceListRequestDTO The request DTO containing partyId and income sources
+     * @return ResponseEntity with list of IncomeSourceDTO and HTTP status
+     */
+    @PostMapping("/income-sources")
+    public ResponseEntity<?> saveOrUpdateIncomeSources(@RequestBody IncomeSourceListRequestDTO incomeSourceListRequestDTO) {
+        try {
+            List<IncomeSourceDTO> savedIncomeSources = comprehensiveLeadService.saveOrUpdateIncomeSources(
+                    incomeSourceListRequestDTO
+            );
+            return ResponseEntity.ok(savedIncomeSources);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ErrorResponse("Error saving income sources", e.getMessage()));
@@ -102,10 +128,10 @@ public class ComprehensiveLeadController {
             @PathVariable Long partyId,
             @RequestBody List<IncomeSourceRequestDTO> incomeSourceRequestDTOs) {
         try {
-            List<IncomeSourceDTO> updatedIncomeSources = comprehensiveLeadService.updateIncomeSources(
-                    partyId, 
-                    incomeSourceRequestDTOs
-            );
+            IncomeSourceListRequestDTO requestDTO = new IncomeSourceListRequestDTO();
+            requestDTO.setPartyId(partyId);
+            requestDTO.setIncomeSources(incomeSourceRequestDTOs);
+            List<IncomeSourceDTO> updatedIncomeSources = comprehensiveLeadService.saveOrUpdateIncomeSources(requestDTO);
             return ResponseEntity.ok(updatedIncomeSources);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -128,11 +154,33 @@ public class ComprehensiveLeadController {
             @PathVariable Long leadId,
             @RequestBody List<RelatedPartyRequestDTO> relatedPartyRequestDTOs) {
         try {
-            List<RelatedPartyDTO> savedRelatedParties = comprehensiveLeadService.saveRelatedParties(
-                    leadId, 
-                    relatedPartyRequestDTOs
-            );
+            RelatedPartyListRequestDTO requestDTO = new RelatedPartyListRequestDTO();
+            requestDTO.setLeadId(leadId);
+            requestDTO.setRelatedParties(relatedPartyRequestDTOs);
+            List<RelatedPartyDTO> savedRelatedParties = comprehensiveLeadService.saveOrUpdateRelatedParties(requestDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body(savedRelatedParties);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ErrorResponse("Error saving related parties", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrorResponse("Unexpected error", e.getMessage()));
+        }
+    }
+    
+    /**
+     * Save or update related parties using leadId in the request body
+     * 
+     * @param relatedPartyListRequestDTO The request DTO containing leadId and related parties
+     * @return ResponseEntity with list of RelatedPartyDTO and HTTP status
+     */
+    @PostMapping("/related-parties")
+    public ResponseEntity<?> saveOrUpdateRelatedParties(@RequestBody RelatedPartyListRequestDTO relatedPartyListRequestDTO) {
+        try {
+            List<RelatedPartyDTO> savedRelatedParties = comprehensiveLeadService.saveOrUpdateRelatedParties(
+                    relatedPartyListRequestDTO
+            );
+            return ResponseEntity.ok(savedRelatedParties);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ErrorResponse("Error saving related parties", e.getMessage()));
@@ -155,10 +203,10 @@ public class ComprehensiveLeadController {
             @PathVariable Long leadId,
             @RequestBody List<RelatedPartyRequestDTO> relatedPartyRequestDTOs) {
         try {
-            List<RelatedPartyDTO> updatedRelatedParties = comprehensiveLeadService.updateRelatedParties(
-                    leadId, 
-                    relatedPartyRequestDTOs
-            );
+            RelatedPartyListRequestDTO requestDTO = new RelatedPartyListRequestDTO();
+            requestDTO.setLeadId(leadId);
+            requestDTO.setRelatedParties(relatedPartyRequestDTOs);
+            List<RelatedPartyDTO> updatedRelatedParties = comprehensiveLeadService.saveOrUpdateRelatedParties(requestDTO);
             return ResponseEntity.ok(updatedRelatedParties);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -203,7 +251,8 @@ public class ComprehensiveLeadController {
             @PathVariable Long leadId,
             @RequestBody ComprehensiveLeadRequestDTO comprehensiveLeadRequestDTO) {
         try {
-            ComprehensiveLeadDTO updatedLead = comprehensiveLeadService.updateLeadWithChildren(leadId, comprehensiveLeadRequestDTO);
+            comprehensiveLeadRequestDTO.setCompLeadId(leadId);
+            ComprehensiveLeadDTO updatedLead = comprehensiveLeadService.saveOrUpdateLeadWithChildren(comprehensiveLeadRequestDTO);
             return ResponseEntity.ok(updatedLead);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)

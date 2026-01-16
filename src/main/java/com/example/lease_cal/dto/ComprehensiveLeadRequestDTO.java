@@ -5,6 +5,7 @@ import java.util.List;
 
 public class ComprehensiveLeadRequestDTO {
     
+    private Long compLeadId;
     private String leadName;
     private String createdBy;
     private List<PartyRequestDTO> parties;
@@ -17,6 +18,14 @@ public class ComprehensiveLeadRequestDTO {
     }
     
     // Getters and Setters
+    public Long getCompLeadId() {
+        return compLeadId;
+    }
+    
+    public void setCompLeadId(Long compLeadId) {
+        this.compLeadId = compLeadId;
+    }
+    
     public String getLeadName() {
         return leadName;
     }

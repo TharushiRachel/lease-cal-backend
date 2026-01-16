@@ -67,6 +67,22 @@ public class ComprehensiveLeadService {
     }
     
     /**
+     * Save or update a comprehensive lead based on compLeadId in the request body
+     * If compLeadId is 0 or null, it creates a new lead
+     * If compLeadId is provided, it updates the existing lead
+     * 
+     * @param comprehensiveLeadRequestDTO The comprehensive lead request DTO containing lead and party data
+     * @return ComprehensiveLeadDTO with saved data including IDs
+     */
+    public ComprehensiveLeadDTO saveOrUpdateLeadWithChildren(ComprehensiveLeadRequestDTO comprehensiveLeadRequestDTO) {
+        Long leadId = comprehensiveLeadRequestDTO.getCompLeadId();
+        if (leadId != null && leadId > 0) {
+            return updateLeadWithChildren(leadId, comprehensiveLeadRequestDTO);
+        }
+        return saveLeadWithChildren(comprehensiveLeadRequestDTO);
+    }
+    
+    /**
      * Save a party for a comprehensive lead
      * 
      * @param compLeadId The ID of the comprehensive lead
@@ -151,6 +167,28 @@ public class ComprehensiveLeadService {
     }
     
     /**
+     * Save or update income sources based on partyId in the request body
+     * This replaces any existing income sources for the party
+     * 
+     * @param incomeSourceListRequestDTO The income source list request DTO with partyId
+     * @return List of saved IncomeSourceDTOs
+     * @throws RuntimeException if party is not found
+     */
+    public List<IncomeSourceDTO> saveOrUpdateIncomeSources(IncomeSourceListRequestDTO incomeSourceListRequestDTO) {
+        Long partyId = incomeSourceListRequestDTO.getPartyId();
+        if (partyId == null || partyId <= 0) {
+            throw new RuntimeException("Party ID is required");
+        }
+        
+        List<IncomeSourceRequestDTO> incomeSources = incomeSourceListRequestDTO.getIncomeSources();
+        if (incomeSources == null) {
+            incomeSources = new ArrayList<>();
+        }
+        
+        return updateIncomeSources(partyId, incomeSources);
+    }
+    
+    /**
      * Save related parties for a lead
      * 
      * @param leadId The ID of the lead
@@ -200,6 +238,28 @@ public class ComprehensiveLeadService {
         
         // Use existing save method to recreate related parties
         return saveRelatedParties(leadId, relatedPartyRequestDTOs);
+    }
+    
+    /**
+     * Save or update related parties based on leadId in the request body
+     * This replaces any existing related parties for the lead
+     * 
+     * @param relatedPartyListRequestDTO The related party list request DTO with leadId
+     * @return List of saved RelatedPartyDTOs
+     * @throws RuntimeException if comprehensive lead is not found
+     */
+    public List<RelatedPartyDTO> saveOrUpdateRelatedParties(RelatedPartyListRequestDTO relatedPartyListRequestDTO) {
+        Long leadId = relatedPartyListRequestDTO.getLeadId();
+        if (leadId == null || leadId <= 0) {
+            throw new RuntimeException("Lead ID is required");
+        }
+        
+        List<RelatedPartyRequestDTO> relatedParties = relatedPartyListRequestDTO.getRelatedParties();
+        if (relatedParties == null) {
+            relatedParties = new ArrayList<>();
+        }
+        
+        return updateRelatedParties(leadId, relatedParties);
     }
     
     /**
