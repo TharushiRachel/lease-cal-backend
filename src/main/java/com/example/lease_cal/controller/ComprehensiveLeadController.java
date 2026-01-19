@@ -269,19 +269,113 @@ public class ComprehensiveLeadController {
     }
 
     /**
-     * Soft-delete all child entities by setting status to INACTIVE
-     *
-     * @param leadId The ID of the comprehensive lead
-     * @return ResponseEntity with success message and HTTP status
+     * Soft-delete a party (and its children) by setting status to INACTIVE
      */
-    @DeleteMapping("/{leadId}/children")
-    public ResponseEntity<?> deactivateChildrenForLead(@PathVariable Long leadId) {
+    @DeleteMapping("/{leadId}/parties/{partyId}")
+    public ResponseEntity<?> deactivatePartyForLead(
+            @PathVariable Long leadId,
+            @PathVariable Long partyId) {
         try {
-            comprehensiveLeadService.deactivateChildrenForLead(leadId);
-            return ResponseEntity.ok("Children deactivated successfully");
+            comprehensiveLeadService.deactivatePartyForLead(leadId, partyId);
+            return ResponseEntity.ok("Party deactivated successfully");
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new ErrorResponse("Error deactivating children", e.getMessage()));
+                    .body(new ErrorResponse("Error deactivating party", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrorResponse("Unexpected error", e.getMessage()));
+        }
+    }
+
+    /**
+     * Soft-delete a party identification by setting status to INACTIVE
+     */
+    @DeleteMapping("/parties/{partyId}/identifications/{identificationId}")
+    public ResponseEntity<?> deactivatePartyIdentification(
+            @PathVariable Long partyId,
+            @PathVariable Long identificationId) {
+        try {
+            comprehensiveLeadService.deactivatePartyIdentification(partyId, identificationId);
+            return ResponseEntity.ok("Identification deactivated successfully");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ErrorResponse("Error deactivating identification", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrorResponse("Unexpected error", e.getMessage()));
+        }
+    }
+
+    /**
+     * Soft-delete a party address by setting status to INACTIVE
+     */
+    @DeleteMapping("/parties/{partyId}/addresses/{addressId}")
+    public ResponseEntity<?> deactivatePartyAddress(
+            @PathVariable Long partyId,
+            @PathVariable Long addressId) {
+        try {
+            comprehensiveLeadService.deactivatePartyAddress(partyId, addressId);
+            return ResponseEntity.ok("Address deactivated successfully");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ErrorResponse("Error deactivating address", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrorResponse("Unexpected error", e.getMessage()));
+        }
+    }
+
+    /**
+     * Soft-delete an income source by setting status to INACTIVE
+     */
+    @DeleteMapping("/parties/{partyId}/income-sources/{incomeSourceId}")
+    public ResponseEntity<?> deactivateIncomeSource(
+            @PathVariable Long partyId,
+            @PathVariable Long incomeSourceId) {
+        try {
+            comprehensiveLeadService.deactivateIncomeSource(partyId, incomeSourceId);
+            return ResponseEntity.ok("Income source deactivated successfully");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ErrorResponse("Error deactivating income source", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrorResponse("Unexpected error", e.getMessage()));
+        }
+    }
+
+    /**
+     * Soft-delete a related party by setting status to INACTIVE
+     */
+    @DeleteMapping("/{leadId}/related-parties/{relatedPartyId}")
+    public ResponseEntity<?> deactivateRelatedParty(
+            @PathVariable Long leadId,
+            @PathVariable Long relatedPartyId) {
+        try {
+            comprehensiveLeadService.deactivateRelatedParty(leadId, relatedPartyId);
+            return ResponseEntity.ok("Related party deactivated successfully");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ErrorResponse("Error deactivating related party", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrorResponse("Unexpected error", e.getMessage()));
+        }
+    }
+
+    /**
+     * Soft-delete a facility by setting status to INACTIVE
+     */
+    @DeleteMapping("/{leadId}/facilities/{facilityId}")
+    public ResponseEntity<?> deactivateFacility(
+            @PathVariable Long leadId,
+            @PathVariable Long facilityId) {
+        try {
+            comprehensiveLeadService.deactivateFacility(leadId, facilityId);
+            return ResponseEntity.ok("Facility deactivated successfully");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ErrorResponse("Error deactivating facility", e.getMessage()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new ErrorResponse("Unexpected error", e.getMessage()));

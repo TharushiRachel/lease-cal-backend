@@ -27,6 +27,12 @@ public class ComprehensiveLeadService {
     
     @Autowired
     private RelatedPartyRepository relatedPartyRepository;
+
+    @Autowired
+    private PartyIdentificationRepository partyIdentificationRepository;
+
+    @Autowired
+    private PartyAddressRepository partyAddressRepository;
     
     @Autowired
     private ComprehensiveFacilityRepository comprehensiveFacilityRepository;
@@ -610,53 +616,133 @@ public class ComprehensiveLeadService {
     }
 
     /**
-     * Soft-delete all child records for a comprehensive lead by updating status to INACTIVE
+     * Soft-delete a party and its children by updating status to INACTIVE
      *
      * @param leadId The ID of the comprehensive lead
+     * @param partyId The ID of the party to deactivate
      */
-    public void deactivateChildrenForLead(Long leadId) {
-        ComprehensiveLead comprehensiveLead = comprehensiveLeadRepository.findByIdWithAllRelations(leadId)
+    public void deactivatePartyForLead(Long leadId, Long partyId) {
+        ComprehensiveLead comprehensiveLead = comprehensiveLeadRepository.findById(leadId)
                 .orElseThrow(() -> new RuntimeException("Comprehensive Lead not found with id: " + leadId));
 
-        if (comprehensiveLead.getParties() != null) {
-            for (Party party : comprehensiveLead.getParties()) {
-                party.setStatus("INACTIVE");
+        Party party = partyRepository.findById(partyId)
+                .orElseThrow(() -> new RuntimeException("Party not found with id: " + partyId));
 
-                if (party.getIdentifications() != null) {
-                    for (PartyIdentification identification : party.getIdentifications()) {
-                        identification.setStatus("INACTIVE");
-                    }
-                }
+        if (party.getLead() == null || !party.getLead().getCompLeadId().equals(comprehensiveLead.getCompLeadId())) {
+            throw new RuntimeException("Party does not belong to lead id: " + leadId);
+        }
 
-                if (party.getAddresses() != null) {
-                    for (PartyAddress address : party.getAddresses()) {
-                        address.setStatus("INACTIVE");
-                    }
-                }
+        party.setStatus("INACTIVE");
 
-                if (party.getIncomeSources() != null) {
-                    for (IncomeSource incomeSource : party.getIncomeSources()) {
-                        incomeSource.setStatus("INACTIVE");
-                    }
-                }
+        if (party.getIdentifications() != null) {
+            for (PartyIdentification identification : party.getIdentifications()) {
+                identification.setStatus("INACTIVE");
             }
         }
 
-        if (comprehensiveLead.getRelatedParties() != null) {
-            for (RelatedParty relatedParty : comprehensiveLead.getRelatedParties()) {
-                relatedParty.setStatus("INACTIVE");
+        if (party.getAddresses() != null) {
+            for (PartyAddress address : party.getAddresses()) {
+                address.setStatus("INACTIVE");
             }
         }
 
-        List<ComprehensiveFacility> facilities = comprehensiveFacilityRepository.findByLeadId(leadId);
-        if (facilities != null) {
-            for (ComprehensiveFacility facility : facilities) {
-                facility.setStatus("INACTIVE");
+        if (party.getIncomeSources() != null) {
+            for (IncomeSource incomeSource : party.getIncomeSources()) {
+                incomeSource.setStatus("INACTIVE");
             }
-            comprehensiveFacilityRepository.saveAll(facilities);
         }
 
-        comprehensiveLeadRepository.save(comprehensiveLead);
+        partyRepository.save(party);
+    }
+
+    /**
+     * Soft-delete a party identification by updating status to INACTIVE
+     *
+     * @param partyId The ID of the party
+     * @param identificationId The ID of the identification
+     */
+    public void deactivatePartyIdentification(Long partyId, Long identificationId) {
+        PartyIdentification identification = partyIdentificationRepository.findById(identificationId)
+                .orElseThrow(() -> new RuntimeException("Identification not found with id: " + identificationId));
+
+        if (identification.getParty() == null || !identification.getParty().getCompPartyId().equals(partyId)) {
+            throw new RuntimeException("Identification does not belong to party id: " + partyId);
+        }
+
+        identification.setStatus("INACTIVE");
+        partyIdentificationRepository.save(identification);
+    }
+
+    /**
+     * Soft-delete a party address by updating status to INACTIVE
+     *
+     * @param partyId The ID of the party
+     * @param addressId The ID of the address
+     */
+    public void deactivatePartyAddress(Long partyId, Long addressId) {
+        PartyAddress address = partyAddressRepository.findById(addressId)
+                .orElseThrow(() -> new RuntimeException("Address not found with id: " + addressId));
+
+        if (address.getParty() == null || !address.getParty().getCompPartyId().equals(partyId)) {
+            throw new RuntimeException("Address does not belong to party id: " + partyId);
+        }
+
+        address.setStatus("INACTIVE");
+        partyAddressRepository.save(address);
+    }
+
+    /**
+     * Soft-delete an income source by updating status to INACTIVE
+     *
+     * @param partyId The ID of the party
+     * @param incomeSourceId The ID of the income source
+     */
+    public void deactivateIncomeSource(Long partyId, Long incomeSourceId) {
+        IncomeSource incomeSource = incomeSourceRepository.findById(incomeSourceId)
+                .orElseThrow(() -> new RuntimeException("Income source not found with id: " + incomeSourceId));
+
+        if (incomeSource.getParty() == null || !incomeSource.getParty().getCompPartyId().equals(partyId)) {
+            throw new RuntimeException("Income source does not belong to party id: " + partyId);
+        }
+
+        incomeSource.setStatus("INACTIVE");
+        incomeSourceRepository.save(incomeSource);
+    }
+
+    /**
+     * Soft-delete a related party by updating status to INACTIVE
+     *
+     * @param leadId The ID of the comprehensive lead
+     * @param relatedPartyId The ID of the related party
+     */
+    public void deactivateRelatedParty(Long leadId, Long relatedPartyId) {
+        RelatedParty relatedParty = relatedPartyRepository.findById(relatedPartyId)
+                .orElseThrow(() -> new RuntimeException("Related party not found with id: " + relatedPartyId));
+
+        if (relatedParty.getLead() == null || !relatedParty.getLead().getCompLeadId().equals(leadId)) {
+            throw new RuntimeException("Related party does not belong to lead id: " + leadId);
+        }
+
+        relatedParty.setStatus("INACTIVE");
+        relatedPartyRepository.save(relatedParty);
+    }
+
+    /**
+     * Soft-delete a facility by updating status to INACTIVE
+     *
+     * @param leadId The ID of the comprehensive lead
+     * @param facilityId The ID of the facility
+     */
+    public void deactivateFacility(Long leadId, Long facilityId) {
+        ComprehensiveFacility facility = comprehensiveFacilityRepository.findById(facilityId)
+                .orElseThrow(() -> new RuntimeException("Facility not found with id: " + facilityId));
+
+        if (facility.getLead() == null || !facility.getLead().getCompLeadId().equals(leadId)) {
+            throw new RuntimeException("Facility does not belong to lead id: " + leadId);
+        }
+
+        facility.setStatus("INACTIVE");
+        comprehensiveFacilityRepository.save(facility);
     }
     
     /**
