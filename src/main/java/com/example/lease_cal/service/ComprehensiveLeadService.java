@@ -586,7 +586,77 @@ public class ComprehensiveLeadService {
     public ComprehensiveLeadDTO getComprehensiveLeadById(Long leadId) {
         ComprehensiveLead comprehensiveLead = comprehensiveLeadRepository.findByIdWithAllRelations(leadId)
                 .orElseThrow(() -> new RuntimeException("Comprehensive Lead not found with id: " + leadId));
-        return convertToComprehensiveLeadDTO(comprehensiveLead);
+        ComprehensiveLeadDTO comprehensiveLeadDTO = convertToComprehensiveLeadDTO(comprehensiveLead);
+
+        List<IncomeSourceDTO> incomeSourceDTOs = new ArrayList<>();
+        if (comprehensiveLead.getParties() != null) {
+            for (Party party : comprehensiveLead.getParties()) {
+                if (party.getIncomeSources() != null) {
+                    for (IncomeSource incomeSource : party.getIncomeSources()) {
+                        incomeSourceDTOs.add(convertToIncomeSourceDTO(incomeSource));
+                    }
+                }
+            }
+        }
+        comprehensiveLeadDTO.setIncomeSources(incomeSourceDTOs);
+
+        if (comprehensiveLeadDTO.getParties() != null) {
+            for (PartyDTO partyDTO : comprehensiveLeadDTO.getParties()) {
+                partyDTO.setIncomeSources(new ArrayList<>());
+            }
+        }
+
+        return comprehensiveLeadDTO;
+    }
+
+    /**
+     * Soft-delete all child records for a comprehensive lead by updating status to INACTIVE
+     *
+     * @param leadId The ID of the comprehensive lead
+     */
+    public void deactivateChildrenForLead(Long leadId) {
+        ComprehensiveLead comprehensiveLead = comprehensiveLeadRepository.findByIdWithAllRelations(leadId)
+                .orElseThrow(() -> new RuntimeException("Comprehensive Lead not found with id: " + leadId));
+
+        if (comprehensiveLead.getParties() != null) {
+            for (Party party : comprehensiveLead.getParties()) {
+                party.setStatus("INACTIVE");
+
+                if (party.getIdentifications() != null) {
+                    for (PartyIdentification identification : party.getIdentifications()) {
+                        identification.setStatus("INACTIVE");
+                    }
+                }
+
+                if (party.getAddresses() != null) {
+                    for (PartyAddress address : party.getAddresses()) {
+                        address.setStatus("INACTIVE");
+                    }
+                }
+
+                if (party.getIncomeSources() != null) {
+                    for (IncomeSource incomeSource : party.getIncomeSources()) {
+                        incomeSource.setStatus("INACTIVE");
+                    }
+                }
+            }
+        }
+
+        if (comprehensiveLead.getRelatedParties() != null) {
+            for (RelatedParty relatedParty : comprehensiveLead.getRelatedParties()) {
+                relatedParty.setStatus("INACTIVE");
+            }
+        }
+
+        List<ComprehensiveFacility> facilities = comprehensiveFacilityRepository.findByLeadId(leadId);
+        if (facilities != null) {
+            for (ComprehensiveFacility facility : facilities) {
+                facility.setStatus("INACTIVE");
+            }
+            comprehensiveFacilityRepository.saveAll(facilities);
+        }
+
+        comprehensiveLeadRepository.save(comprehensiveLead);
     }
     
     /**

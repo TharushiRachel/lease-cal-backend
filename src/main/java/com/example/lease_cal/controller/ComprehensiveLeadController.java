@@ -267,6 +267,26 @@ public class ComprehensiveLeadController {
                     .body(new ErrorResponse("Error retrieving comprehensive lead", e.getMessage()));
         }
     }
+
+    /**
+     * Soft-delete all child entities by setting status to INACTIVE
+     *
+     * @param leadId The ID of the comprehensive lead
+     * @return ResponseEntity with success message and HTTP status
+     */
+    @DeleteMapping("/{leadId}/children")
+    public ResponseEntity<?> deactivateChildrenForLead(@PathVariable Long leadId) {
+        try {
+            comprehensiveLeadService.deactivateChildrenForLead(leadId);
+            return ResponseEntity.ok("Children deactivated successfully");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ErrorResponse("Error deactivating children", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrorResponse("Unexpected error", e.getMessage()));
+        }
+    }
     
     /**
      * Update a comprehensive lead by deleting existing child records and recreating them

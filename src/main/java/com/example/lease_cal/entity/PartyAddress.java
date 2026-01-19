@@ -18,6 +18,16 @@ public class PartyAddress {
     
     @Column(name = "address", length = 1000)
     private String address;
+
+    @Column(name = "status", length = 20)
+    private String status;
+
+    @PrePersist
+    protected void onCreate() {
+        if (status == null) {
+            status = "ACTIVE";
+        }
+    }
     
     // Constructors
     public PartyAddress() {
@@ -51,6 +61,14 @@ public class PartyAddress {
     
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
 

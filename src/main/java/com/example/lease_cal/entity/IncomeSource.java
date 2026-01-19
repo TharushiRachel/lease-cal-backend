@@ -24,6 +24,16 @@ public class IncomeSource {
     
     @Column(name = "consider_for_repayment", length = 5)
     private String considerForRepayment;
+
+    @Column(name = "status", length = 20)
+    private String status;
+
+    @PrePersist
+    protected void onCreate() {
+        if (status == null) {
+            status = "ACTIVE";
+        }
+    }
     
     // Constructors
     public IncomeSource() {
@@ -73,6 +83,14 @@ public class IncomeSource {
     
     public void setConsiderForRepayment(String considerForRepayment) {
         this.considerForRepayment = considerForRepayment;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
 

@@ -34,11 +34,17 @@ public class PartyIdentification {
     
     @Column(name = "MODIFIED_BY", length = 100)
     private String modifiedBy;
+
+    @Column(name = "status", length = 20)
+    private String status;
     
     @PrePersist
     protected void onCreate() {
         if (createdDate == null) {
             createdDate = LocalDate.now();
+        }
+        if (status == null) {
+            status = "ACTIVE";
         }
     }
     
@@ -120,6 +126,14 @@ public class PartyIdentification {
     
     public void setModifiedBy(String modifiedBy) {
         this.modifiedBy = modifiedBy;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
 

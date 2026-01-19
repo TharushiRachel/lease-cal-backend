@@ -38,6 +38,16 @@ public class RelatedParty {
     
     @Column(name = "consider_advance_analysis", length = 5)
     private String considerAdvanceAnalysis;
+
+    @Column(name = "status", length = 20)
+    private String status;
+
+    @PrePersist
+    protected void onCreate() {
+        if (status == null) {
+            status = "ACTIVE";
+        }
+    }
     
     // Constructors
     public RelatedParty() {
@@ -120,6 +130,14 @@ public class RelatedParty {
     
     public void setConsiderAdvanceAnalysis(String considerAdvanceAnalysis) {
         this.considerAdvanceAnalysis = considerAdvanceAnalysis;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
 

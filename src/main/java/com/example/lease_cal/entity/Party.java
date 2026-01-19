@@ -48,6 +48,9 @@ public class Party {
     
     @Column(name = "consider_advance_analysis", length = 5)
     private String considerAdvanceAnalysis;
+
+    @Column(name = "status", length = 20)
+    private String status;
     
     @Column(name = "CREATED_DATE")
     private LocalDate createdDate;
@@ -80,6 +83,9 @@ public class Party {
     protected void onCreate() {
         if (createdDate == null) {
             createdDate = LocalDate.now();
+        }
+        if (status == null) {
+            status = "ACTIVE";
         }
     }
     
@@ -193,6 +199,14 @@ public class Party {
     
     public void setConsiderAdvanceAnalysis(String considerAdvanceAnalysis) {
         this.considerAdvanceAnalysis = considerAdvanceAnalysis;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
     
     public LocalDate getCreatedDate() {

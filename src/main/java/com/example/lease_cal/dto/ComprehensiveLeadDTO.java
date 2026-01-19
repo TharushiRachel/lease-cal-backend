@@ -15,11 +15,13 @@ public class ComprehensiveLeadDTO {
     private String modifiedBy;
     private List<PartyDTO> parties;
     private List<RelatedPartyDTO> relatedParties;
+    private List<IncomeSourceDTO> incomeSources;
     
     // Constructors
     public ComprehensiveLeadDTO() {
         this.parties = new ArrayList<>();
         this.relatedParties = new ArrayList<>();
+        this.incomeSources = new ArrayList<>();
     }
     
     // Getters and Setters
@@ -93,5 +95,13 @@ public class ComprehensiveLeadDTO {
     
     public void setRelatedParties(List<RelatedPartyDTO> relatedParties) {
         this.relatedParties = relatedParties;
+    }
+
+    public List<IncomeSourceDTO> getIncomeSources() {
+        return incomeSources;
+    }
+
+    public void setIncomeSources(List<IncomeSourceDTO> incomeSources) {
+        this.incomeSources = incomeSources;
     }
 }
